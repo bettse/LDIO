@@ -19,7 +19,9 @@ class LegoReader : NSObject {
     
     func input(inResult: IOReturn, inSender: UnsafeMutablePointer<Void>, type: IOHIDReportType, reportId: UInt32, report: UnsafeMutablePointer<UInt8>, reportLength: CFIndex) {
         let report = NSData(bytes: report, length: reportLength)
-        print("input: \(report)")
+        dispatch_async(dispatch_get_main_queue(), {
+            NSNotificationCenter.defaultCenter().postNotificationName("incomingMessage", object: self, userInfo: ["report": report])
+        })
     }
     
     func output(report: NSData) {
