@@ -10,7 +10,6 @@ import Foundation
 
 class LegoReaderDriver : NSObject {
     static let singleton = LegoReaderDriver()
-
     var readerThread : NSThread?
     
     lazy var reader : LegoReader  = {
@@ -31,8 +30,11 @@ class LegoReaderDriver : NSObject {
     
     func deviceConnected(notification: NSNotification) {
         print("Device connected")
-        //55 0f b0 01 28 63 29 20 4c 45 47 4f 20 32 30 31 34 f7 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-        let activate = NSData(bytes: [0x55, 0x0f, 0xb0, 0x01, 0x28, 0x63, 0x29, 0x20, 0x4c, 0x45, 0x47, 0x4f, 0x20, 0x32, 0x30, 0x31, 0x34, 0xf7, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0] as [UInt8], length: 32)
+        NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: "activate", userInfo: nil, repeats: false)
+    }
+    
+    func activate() {
+        let activate = NSData(fromHex: "55 0f b0 01 28 63 29 20 4c 45 47 4f 20 32 30 31 34 f7")
         reader.output(activate)
     }
     
@@ -40,8 +42,14 @@ class LegoReaderDriver : NSObject {
     func incomingMessage(notification: NSNotification) {
         let userInfo = notification.userInfo
         if let report : NSData = userInfo?["report"] as? NSData {
-            let message = Message(data: report)
-            print(message)
+            
+            if ( Int(report[1].memory) == 0x19) {
+                let reply = NSData(fromHex: "55 06 c0 02 00 ff 6e 18 a2")//Lights up all platforms
+                self.reader.output(reply)
+            }
+
+            //let message = Message(data: report)
+            //print(message)
         }
     }
 

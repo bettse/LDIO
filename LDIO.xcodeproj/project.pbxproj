@@ -14,6 +14,7 @@
 		6D4F1B8E1BB8437B004149DE /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 6D4F1B8D1BB8437B004149DE /* Assets.xcassets */; };
 		6D4F1B911BB8437B004149DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D4F1B8F1BB8437B004149DE /* Main.storyboard */; };
 		6D4F1B991BB843A0004149DE /* LegoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4F1B981BB843A0004149DE /* LegoReader.swift */; settings = {ASSET_TAGS = (); }; };
+		6D6549011BBB6D670018500C /* NSData+fromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6549001BBB6D670018500C /* NSData+fromHex.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		6D4F1B901BB8437B004149DE /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6D4F1B921BB8437B004149DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D4F1B981BB843A0004149DE /* LegoReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegoReader.swift; sourceTree = "<group>"; };
+		6D6549001BBB6D670018500C /* NSData+fromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+fromHex.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 				6D4F1B891BB8437B004149DE /* AppDelegate.swift */,
 				6D4F1B981BB843A0004149DE /* LegoReader.swift */,
 				6D12EBDA1BBA4E8B00D6D49E /* LegoReaderDriver.swift */,
+				6D6549001BBB6D670018500C /* NSData+fromHex.swift */,
 				6D12EBDC1BBA50DC00D6D49E /* Message.swift */,
 				6D4F1B8B1BB8437B004149DE /* ViewController.swift */,
 				6D4F1B8D1BB8437B004149DE /* Assets.xcassets */,
@@ -139,6 +142,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D6549011BBB6D670018500C /* NSData+fromHex.swift in Sources */,
 				6D4F1B991BB843A0004149DE /* LegoReader.swift in Sources */,
 				6D4F1B8C1BB8437B004149DE /* ViewController.swift in Sources */,
 				6D12EBDD1BBA50DC00D6D49E /* Message.swift in Sources */,

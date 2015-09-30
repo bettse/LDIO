@@ -19,6 +19,7 @@ class LegoReader : NSObject {
     
     func input(inResult: IOReturn, inSender: UnsafeMutablePointer<Void>, type: IOHIDReportType, reportId: UInt32, report: UnsafeMutablePointer<UInt8>, reportLength: CFIndex) {
         let report = NSData(bytes: report, length: reportLength)
+        print("Incoming: \(report)")
         dispatch_async(dispatch_get_main_queue(), {
             NSNotificationCenter.defaultCenter().postNotificationName("incomingMessage", object: self, userInfo: ["report": report])
         })
@@ -32,7 +33,7 @@ class LegoReader : NSObject {
             return
         }
         if let reader = device {
-            print("output: \(data)")
+            print("Outgoing: \(data)")
             IOHIDDeviceSetReport(reader, kIOHIDReportTypeOutput, reportId, UnsafePointer<UInt8>(data.bytes), data.length);
         }
     }
