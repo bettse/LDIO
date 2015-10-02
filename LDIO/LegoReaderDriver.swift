@@ -30,7 +30,7 @@ class LegoReaderDriver : NSObject {
     
     func deviceConnected(notification: NSNotification) {
         print("Device connected")
-        NSTimer.scheduledTimerWithTimeInterval(3.0, target: self, selector: "activate", userInfo: nil, repeats: false)
+        self.activate()
     }
     
     func activate() {
@@ -43,14 +43,30 @@ class LegoReaderDriver : NSObject {
         let userInfo = notification.userInfo
         if let report : NSData = userInfo?["report"] as? NSData {
             
-            if ( Int(report[1].memory) == 0x19) {
-                let reply = NSData(fromHex: "55 06 c0 02 00 ff 6e 18 a2")//Lights up all platforms
+            if ( Int(report[0].memory) == 0x56) {
+                let reply = addChecksum(NSData(fromHex: "55 04 d2 02 00 26"))
                 self.reader.output(reply)
             }
 
             //let message = Message(data: report)
             //print(message)
         }
+    }
+    
+    func addChecksum(data: NSData) -> NSData {
+        var sum = 0
+        let length = data.length
+        let newData = data.mutableCopy()
+        
+        let b = UnsafeBufferPointer<UInt8>(start: UnsafePointer(data.bytes), count: length)
+        for i in 0..<length {
+            sum += Int(b[i])
+        }
+            
+        var checksum : UInt8 = UInt8(sum & 0xff)
+        newData.appendBytes(&checksum, length: sizeof(checksum.dynamicType))
+
+        return newData as! NSData
     }
 
 }
