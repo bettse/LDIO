@@ -1,74 +1,47 @@
 //
 //  Message.swift
-//  LDIO
+//  DIMP
 //
-//  Created by Eric Betts on 9/28/15.
+//  Created by Eric Betts on 6/19/15.
 //  Copyright © 2015 Eric Betts. All rights reserved.
 //
 
 import Foundation
-/*
-VVLLPPXXDDTTTTTTTTTTTTTTCC
-VV = 'V' literal
-LL = length
-PP = Platform (1 = center, 2 = left, 3 = right)
-XX = ??
-DD = direction (0 = arriving, 1 = departing)
-TTTTTTTTTTTTTT = Tag UID
-CC = I haven't done the math, but I hypothesize this is a checksum
-*/
 
+//Parent class of Command, Response, and Update
+
+
+//CustomStringConvertible make the 'description' method possible
 class Message : CustomStringConvertible {
-    var data : NSData
-    
-    var type : UInt8 {
-        get {
-            let offset = 0
-            var value : UInt8 = 0
-            let size = sizeof(value.dynamicType)
-            data.getBytes(&value, range: NSMakeRange(offset, size))
-            return value
+    enum commandType : UInt8 {
+        case Activate = 0xB0
+        case Seed = 0xB1
+        case Next = 0xB3
+        case LightOn = 0xC0
+        case LightFade = 0xC2
+        case LightFlash = 0xC6
+        case Read = 0xD2
+        case Write = 0xD4
+        func desc() -> String {
+            return String(self).componentsSeparatedByString(".").last!
+        }
+    }    
+    enum LedPlatform : UInt8 {
+        case All = 0
+        case Center = 1
+        case Left = 2
+        case Right = 3
+        case None = 0xFF
+        func desc() -> String {
+            return String(self).componentsSeparatedByString(".").last!
         }
     }
     
-    var length : UInt8 {
-        get {
-            let offset = 1
-            var value : UInt8 = 0
-            let size = sizeof(value.dynamicType)
-            data.getBytes(&value, range: NSMakeRange(offset, size))
-            return value
-        }
-    }
-
-    //Make into an enum
-    var direction : UInt8 {
-        get {
-            let offset = 5
-            var value : UInt8 = 0
-            let size = sizeof(value.dynamicType)
-            data.getBytes(&value, range: NSMakeRange(offset, size))
-            return value
-        }
-    }
-    
-    var uid : NSData {
-        get {
-            let offset = 6
-            let length = 7
-            let range = NSMakeRange(offset, length)
-            return data.subdataWithRange(range)
-        }
-    }
-    
-    init(data: NSData) {
-        self.data = data
-    }
+    static var archive = [UInt8: Message]()
     
     var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(uid \(uid) in direction \(direction))"
+        return "\(me)"
     }
-    
 
 }

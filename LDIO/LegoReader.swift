@@ -18,24 +18,33 @@ class LegoReader : NSObject {
     var device : IOHIDDevice? = nil
     
     func input(inResult: IOReturn, inSender: UnsafeMutablePointer<Void>, type: IOHIDReportType, reportId: UInt32, report: UnsafeMutablePointer<UInt8>, reportLength: CFIndex) {
-        let report = NSData(bytes: report, length: reportLength)
-        print("Incoming: \(report)")
-        dispatch_async(dispatch_get_main_queue(), {
-            NSNotificationCenter.defaultCenter().postNotificationName("incomingMessage", object: self, userInfo: ["report": report])
-        })
+        let data = NSData(bytes: report, length: reportLength)
+        let report = Report(input: data)
+        if let msg = report.content {
+            dispatch_async(dispatch_get_main_queue(), {
+                NSNotificationCenter.defaultCenter().postNotificationName("incomingMessage", object: self, userInfo: ["message": msg])
+            })
+        } else {
+            print("Found no content for input: \(report)")
+        }
     }
     
-    func output(report: NSData) {
+    func output(report: Report) {
         let reportId : CFIndex = 0
-        let data = report
+        let data = report.serialize()
         if (data.length > reportSize) {
             print("output data too large for USB report", terminator: "\n")
             return
         }
         if let reader = device {
-            print("Outgoing: \(data)")
+            //print("Sending bytes: \(data)")
             IOHIDDeviceSetReport(reader, kIOHIDReportTypeOutput, reportId, UnsafePointer<UInt8>(data.bytes), data.length);
         }
+    }
+    
+    func outputCommand(cmd: Command) {
+        //print("command: \(cmd)")
+        output(Report(cmd: cmd))
     }
    
     func connected(inResult: IOReturn, inSender: UnsafeMutablePointer<Void>, inIOHIDDeviceRef: IOHIDDevice!) {

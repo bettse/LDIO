@@ -8,15 +8,21 @@
 
 import Foundation
 
+typealias tokenLoad = (Message.LedPlatform, Int, NTAG213) -> Void
+typealias tokenLeft = (Message.LedPlatform, Int) -> Void
+
 class LegoReaderDriver : NSObject {
     static let singleton = LegoReaderDriver()
+    static let magic : NSData = "(c) LEGO 2014".dataUsingEncoding(NSASCIIStringEncoding)!
+
+    var reader : LegoReader = LegoReader.singleton
     var readerThread : NSThread?
     
-    lazy var reader : LegoReader  = {
-        return LegoReader.singleton
-        }()
+    var loadTokenCallbacks : [tokenLoad] = []
+    var leftTokenCallbacks : [tokenLeft] = []
 
-    
+    var partialTokens : [UInt8:NTAG213] = [:]
+
     override init() {
         super.init()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceConnected:", name: "deviceConnected", object: nil)
@@ -28,45 +34,69 @@ class LegoReaderDriver : NSObject {
         }
     }
     
+    func registerTokenLoaded(callback: tokenLoad) {
+        loadTokenCallbacks.append(callback)
+    }
+    func registerTokenLeft(callback: tokenLeft) {
+        leftTokenCallbacks.append(callback)
+    }
+    
     func deviceConnected(notification: NSNotification) {
-        print("Device connected")
-        self.activate()
+        print("Device connected, activating")
+        reader.outputCommand(ActivateCommand())
     }
-    
-    func activate() {
-        let activate = NSData(fromHex: "55 0f b0 01 28 63 29 20 4c 45 47 4f 20 32 30 31 34 f7")
-        reader.output(activate)
-    }
-    
     
     func incomingMessage(notification: NSNotification) {
         let userInfo = notification.userInfo
-        if let report : NSData = userInfo?["report"] as? NSData {
-            
-            if ( Int(report[0].memory) == 0x56) {
-                let reply = addChecksum(NSData(fromHex: "55 04 d2 02 00 26"))
-                self.reader.output(reply)
+        if let message = userInfo?["message"] as? Message {
+            print("incoming: \(message)")
+            if let update = message as? Update {
+                incomingUpdate(update)
+            } else if let response = message as? Response {
+                incomingResponse(response)
             }
-
-            //let message = Message(data: report)
-            //print(message)
+        } else {
+            print("incomingMessage event had no message in \(userInfo)")
         }
     }
     
-    func addChecksum(data: NSData) -> NSData {
-        var sum = 0
-        let length = data.length
-        let newData = data.mutableCopy()
-        
-        let b = UnsafeBufferPointer<UInt8>(start: UnsafePointer(data.bytes), count: length)
-        for i in 0..<length {
-            sum += Int(b[i])
+    func incomingUpdate(update: Update) {
+        if (update.direction == Update.Direction.Arriving) {
+            partialTokens[update.nfcIndex] = NTAG213(tagId: update.uid)
+            reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
+        } else if (update.direction == Update.Direction.Departing) {
+            dispatch_async(dispatch_get_main_queue(), {
+                for callback in self.leftTokenCallbacks {
+                    //callback(update.ledPlatform, Int(update.nfcIndex))
+                }
+            })
         }
-            
-        var checksum : UInt8 = UInt8(sum & 0xff)
-        newData.appendBytes(&checksum, length: sizeof(checksum.dynamicType))
-
-        return newData as! NSData
     }
+    
+    func incomingResponse(response: Response) {
+        if let _ = response as? ActivateResponse {
 
+        } else if let response = response as? ReadResponse {
+            tokenRead(response)
+        } else {
+            print("Received \(response) for command \(response.command)", terminator: "\n")
+        }
+    }
+    
+    func tokenRead(response: ReadResponse) {
+        if let token = partialTokens[response.nfcIndex] {
+            token.load(response.pageNumber, pageData: response.pageData)
+            if (token.complete()) {
+                print("Complete token: \(token)")
+                dispatch_async(dispatch_get_main_queue(), {
+                    for callback in self.loadTokenCallbacks {
+                        //callback(Message.LedPlatform.All, Int(response.nfcIndex), token)
+                    }
+                })
+                //partialTokens.removeValueForKey(response.nfcIndex)
+            } else {
+                reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))
+            }
+        } //end if token
+    }
 }
