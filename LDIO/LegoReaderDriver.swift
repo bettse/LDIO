@@ -8,7 +8,7 @@
 
 import Foundation
 
-typealias tokenLoad = (Message.LedPlatform, Int, NTAG213) -> Void
+typealias tokenLoad = (Message.LedPlatform, Int, Token) -> Void
 typealias tokenLeft = (Message.LedPlatform, Int) -> Void
 
 class LegoReaderDriver : NSObject {
@@ -21,7 +21,7 @@ class LegoReaderDriver : NSObject {
     var loadTokenCallbacks : [tokenLoad] = []
     var leftTokenCallbacks : [tokenLeft] = []
 
-    var partialTokens : [UInt8:NTAG213] = [:]
+    var partialTokens : [UInt8:Token] = [:]
 
     override init() {
         super.init()
@@ -62,7 +62,7 @@ class LegoReaderDriver : NSObject {
     
     func incomingUpdate(update: Update) {
         if (update.direction == Update.Direction.Arriving) {
-            partialTokens[update.nfcIndex] = NTAG213(tagId: update.uid)
+            partialTokens[update.nfcIndex] = Token(tagId: update.uid)
             reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {

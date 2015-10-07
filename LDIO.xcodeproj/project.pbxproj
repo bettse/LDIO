@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6D0119031BC4BC5F004758FA /* Token.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D0119021BC4BC5F004758FA /* Token.swift */; settings = {ASSET_TAGS = (); }; };
 		6D12EBDB1BBA4E8B00D6D49E /* LegoReaderDriver.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EBDA1BBA4E8B00D6D49E /* LegoReaderDriver.swift */; settings = {ASSET_TAGS = (); }; };
 		6D12EBDD1BBA50DC00D6D49E /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D12EBDC1BBA50DC00D6D49E /* Message.swift */; settings = {ASSET_TAGS = (); }; };
 		6D4F1B8A1BB8437B004149DE /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4F1B891BB8437B004149DE /* AppDelegate.swift */; };
@@ -20,9 +21,11 @@
 		6DC3F1361BC08C0200DB31D5 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1321BC08C0200DB31D5 /* Response.swift */; settings = {ASSET_TAGS = (); }; };
 		6DC3F1371BC08C0200DB31D5 /* Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1331BC08C0200DB31D5 /* Update.swift */; settings = {ASSET_TAGS = (); }; };
 		6DC3F13A1BC0971D00DB31D5 /* NTAG213.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */; settings = {ASSET_TAGS = (); }; };
+		6DC3F13C1BC0BFC600DB31D5 /* NDEF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */; settings = {ASSET_TAGS = (); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		6D0119021BC4BC5F004758FA /* Token.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Token.swift; sourceTree = "<group>"; };
 		6D12EBDA1BBA4E8B00D6D49E /* LegoReaderDriver.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegoReaderDriver.swift; sourceTree = "<group>"; };
 		6D12EBDC1BBA50DC00D6D49E /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
 		6D4F1B861BB8437B004149DE /* LDIO.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LDIO.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -38,6 +41,7 @@
 		6DC3F1321BC08C0200DB31D5 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
 		6DC3F1331BC08C0200DB31D5 /* Update.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Update.swift; sourceTree = "<group>"; };
 		6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTAG213.swift; sourceTree = "<group>"; };
+		6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NDEF.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,6 +78,8 @@
 				6D4F1B981BB843A0004149DE /* LegoReader.swift */,
 				6D12EBDA1BBA4E8B00D6D49E /* LegoReaderDriver.swift */,
 				6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */,
+				6D0119021BC4BC5F004758FA /* Token.swift */,
+				6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */,
 				6DC3F1301BC08C0200DB31D5 /* Command.swift */,
 				6DC3F1311BC08C0200DB31D5 /* Report.swift */,
 				6DC3F1321BC08C0200DB31D5 /* Response.swift */,
@@ -171,10 +177,12 @@
 				6D4F1B8C1BB8437B004149DE /* ViewController.swift in Sources */,
 				6DC3F1351BC08C0200DB31D5 /* Report.swift in Sources */,
 				6DC3F1361BC08C0200DB31D5 /* Response.swift in Sources */,
+				6DC3F13C1BC0BFC600DB31D5 /* NDEF.swift in Sources */,
 				6D12EBDD1BBA50DC00D6D49E /* Message.swift in Sources */,
 				6DC3F1341BC08C0200DB31D5 /* Command.swift in Sources */,
 				6D4F1B8A1BB8437B004149DE /* AppDelegate.swift in Sources */,
 				6D12EBDB1BBA4E8B00D6D49E /* LegoReaderDriver.swift in Sources */,
+				6D0119031BC4BC5F004758FA /* Token.swift in Sources */,
 				6DC3F13A1BC0971D00DB31D5 /* NTAG213.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

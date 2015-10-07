@@ -13,6 +13,10 @@ class NTAG213 : CustomStringConvertible {
     static let pageSize : Int = 4//bytes
     static let tokenSize : Int = pageSize * pageCount
     static let uidLength = 7
+    static let userMemoryPage = 0x04
+    static let userMemoryLength = 144 //bytes
+    static let cfg0Page = 0x29
+    static let cfg1Page = 0x2A
 
     var tagId : NSData
     var data : NSMutableData = NSMutableData()
@@ -23,10 +27,33 @@ class NTAG213 : CustomStringConvertible {
         }
     }
     
+    var userMemory : NSData {
+        get {
+            return pageRange(NTAG213.userMemoryPage, pageCount: NTAG213.userMemoryLength)
+        }
+    }
+    
+    var dynamicLockBytes : NSData {
+        get {
+            return page(0x28)
+        }
+    }
+
+    var Config0 : NSData {
+        get {
+            return page(0x29)
+        }
+    }
+    
+    var Config1 : NSData {
+        get {
+            return page(0x2A)
+        }
+    }
+    
     var filename : String {
         get {
             return "\(tagId).bin"
-            
         }
     }
     
@@ -36,7 +63,7 @@ class NTAG213 : CustomStringConvertible {
     
     var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(uid)::\(data)"
+        return "\(me)(\(uid)::\(userMemory)"
     }
     
     func nextPage() -> Int {
@@ -45,6 +72,14 @@ class NTAG213 : CustomStringConvertible {
     
     func complete() -> Bool{
         return (nextPage() >= NTAG213.pageCount)
+    }
+    
+    func page(pageNumber: Int) -> NSData {
+        return data.subdataWithRange(NSMakeRange(pageNumber * NTAG213.pageSize, NTAG213.pageSize))
+    }
+    
+    func pageRange(pageNumber: Int, pageCount: Int) -> NSData {
+        return data.subdataWithRange(NSMakeRange(pageNumber * NTAG213.pageSize, pageCount * NTAG213.pageSize))
     }
 
     func load(pageNumber: Int, pageData: NSData) {
