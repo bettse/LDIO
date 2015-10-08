@@ -21,7 +21,8 @@ class Message : CustomStringConvertible {
         case LightFade = 0xC2
         case LightFlash = 0xC6
         case Read = 0xD2
-        case Write = 0xD4
+        case Write = 0xD3
+        case UnknownD4 = 0xD4
         func desc() -> String {
             return String(self).componentsSeparatedByString(".").last!
         }

@@ -88,4 +88,33 @@ class ReadCommand : Command {
     }
 }
 
+class WriteCommand : Command {
+    var nfcIndex : UInt8
+    var pageNumber : UInt8
+    var data : NSData
+    
+    init(nfcIndex: UInt8, page: UInt8, data: NSData) {
+        self.nfcIndex = nfcIndex
+        self.pageNumber = page
+        self.data = data
+        super.init()
+        type = .Write
+        if (data.length != NTAG213.pageSize) {
+            print("WriteCommand data is not the correct length")
+        }
+        let temp = NSMutableData(bytes: [nfcIndex, page] as [UInt8], length: 2)
+        temp.appendData(data)
+        params = NSData(data: temp)
+    }
+    
+    convenience init(nfcIndex: UInt8, page: Int, data: NSData) {
+        self.init(nfcIndex: nfcIndex, page: UInt8(page), data: data)
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(NFC \(nfcIndex) page 0x\(String(pageNumber, radix: 0x10)))"
+    }
+}
+
 

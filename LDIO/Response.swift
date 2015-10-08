@@ -38,8 +38,10 @@ class Response : Message {
             return ActivateResponse(data: data)
         case .Read:
             return ReadResponse(data: data)
+        case .Write:
+            return WriteResponse(data: data)
         default:
-            print("par with data: \(data)")
+            print("unknown parse with data: \(data)")
             return Response(data: data)
         }
     }
@@ -92,6 +94,35 @@ class ReadResponse : Response {
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
         return "\(me)(Platform \(nfcIndex) page \(pageNumber): \(pageData))"
+    }
+}
+
+class WriteResponse : Response {
+    //Delegates for easier access
+    var pageNumber : UInt8  {
+        get {
+            if let command = command as? WriteCommand {
+                return command.pageNumber
+            }
+            return 0
+        }
+    }
+    var nfcIndex : UInt8  {
+        get {
+            if let command = command as? WriteCommand {
+                return command.nfcIndex
+            }
+            return 0
+        }
+    }
+    
+    override init(data: NSData) {
+        super.init(data: data)
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(NFC \(nfcIndex) page \(pageNumber))"
     }
 }
 

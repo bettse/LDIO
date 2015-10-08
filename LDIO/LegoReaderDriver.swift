@@ -67,7 +67,7 @@ class LegoReaderDriver : NSObject {
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {
                 for callback in self.leftTokenCallbacks {
-                    //callback(update.ledPlatform, Int(update.nfcIndex))
+                    callback(update.ledPlatform, Int(update.nfcIndex))
                 }
             })
         }
@@ -90,9 +90,11 @@ class LegoReaderDriver : NSObject {
                 print("Complete token: \(token)")
                 dispatch_async(dispatch_get_main_queue(), {
                     for callback in self.loadTokenCallbacks {
-                        //callback(Message.LedPlatform.All, Int(response.nfcIndex), token)
+                        callback(Message.LedPlatform.All, Int(response.nfcIndex), token)
                     }
                 })
+                let data = NSData(fromHex: "ef 03 00 00")
+                //reader.outputCommand(WriteCommand(nfcIndex: response.nfcIndex, page: 36, data: data))
                 //partialTokens.removeValueForKey(response.nfcIndex)
             } else {
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))
