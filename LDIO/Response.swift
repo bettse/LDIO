@@ -40,6 +40,10 @@ class Response : Message {
             return ReadResponse(data: data)
         case .Write:
             return WriteResponse(data: data)
+        case .B1:
+            return B1Response(data: data)
+        case .D0:
+            return D0Response(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -126,3 +130,35 @@ class WriteResponse : Response {
     }
 }
 
+class B1Response : Response {
+    var params : NSData
+    var value : UInt64 = 0
+    let paramsIndex = 1
+    
+    override init(data: NSData) {
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        params.getBytes(&value, length: sizeof(value.dynamicType))
+        value = value.bigEndian
+        super.init(data: data)
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params) \(value))"
+    }
+}
+
+class D0Response : Response {
+    var params : NSData
+    let paramsIndex = 1
+    
+    override init(data: NSData) {
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        super.init(data: data)
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}

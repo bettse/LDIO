@@ -22,6 +22,8 @@ class LegoReaderDriver : NSObject {
     var leftTokenCallbacks : [tokenLeft] = []
 
     var partialTokens : [UInt8:Token] = [:]
+    
+    var b1Value : UInt64 = 1
 
     override init() {
         super.init()
@@ -49,7 +51,6 @@ class LegoReaderDriver : NSObject {
     func incomingMessage(notification: NSNotification) {
         let userInfo = notification.userInfo
         if let message = userInfo?["message"] as? Message {
-            print("incoming: \(message)")
             if let update = message as? Update {
                 incomingUpdate(update)
             } else if let response = message as? Response {
@@ -72,10 +73,26 @@ class LegoReaderDriver : NSObject {
             })
         }
     }
+
+    func b1Test() {
+        let b1data = NSMutableData(length: sizeof(b1Value.dynamicType))
+        b1data?.replaceBytesInRange(NSMakeRange(0, sizeof(b1Value.dynamicType)), withBytes: &b1Value)
+        reader.outputCommand(B1Command(data: NSData(data: b1data!)))
+        /*
+        if (b1Value == 0) {
+            b1Value = UInt64.max
+        } else {
+            b1Value = 0
+        }
+        */
+        b1Value *= 2
+    }
     
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
-
+            print(response)
+            //Start testing b1 command
+            //NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "b1Test", userInfo: nil, repeats: true)
         } else if let response = response as? ReadResponse {
             tokenRead(response)
         } else {
@@ -93,9 +110,7 @@ class LegoReaderDriver : NSObject {
                         callback(Message.LedPlatform.All, Int(response.nfcIndex), token)
                     }
                 })
-                let data = NSData(fromHex: "ef 03 00 00")
-                //reader.outputCommand(WriteCommand(nfcIndex: response.nfcIndex, page: 36, data: data))
-                //partialTokens.removeValueForKey(response.nfcIndex)
+                partialTokens.removeValueForKey(response.nfcIndex)
             } else {
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))
             }

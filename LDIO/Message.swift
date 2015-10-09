@@ -15,14 +15,15 @@ import Foundation
 class Message : CustomStringConvertible {
     enum commandType : UInt8 {
         case Activate = 0xB0
-        case Seed = 0xB1
-        case Next = 0xB3
+        case B1 = 0xB1
+        case B3 = 0xB3
         case LightOn = 0xC0
         case LightFade = 0xC2
         case LightFlash = 0xC6
+        case D0 = 0xD0
         case Read = 0xD2
         case Write = 0xD3
-        case UnknownD4 = 0xD4
+        case D4 = 0xD4
         func desc() -> String {
             return String(self).componentsSeparatedByString(".").last!
         }

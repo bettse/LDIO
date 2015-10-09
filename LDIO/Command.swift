@@ -118,3 +118,34 @@ class WriteCommand : Command {
 }
 
 
+class B1Command : Command {
+    override init(data: NSData) {
+        super.init()
+        type = .B1
+        if (data.length != 8) {
+            print("Incorrect length for Bee1 command")
+        }
+        params = data
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+//Presence
+class D0Command : Command {
+    override init() {
+        super.init()
+        type = .D0
+        params = NSData()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+
