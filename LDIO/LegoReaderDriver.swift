@@ -110,6 +110,13 @@ class LegoReaderDriver : NSObject {
                         callback(Message.LedPlatform.All, Int(response.nfcIndex), token)
                     }
                 })
+                /*
+                var vgtype : UInt32 = 1015
+                let data : NSMutableData = NSMutableData(capacity: sizeof(vgtype.dynamicType))!
+                data.replaceBytesInRange(NSMakeRange(0, sizeof(vgtype.dynamicType)), withBytes: &vgtype)
+                let write = WriteCommand(nfcIndex: response.nfcIndex, page: 0x24, data: NSData(data: data))
+                reader.outputCommand(write)
+                */
                 partialTokens.removeValueForKey(response.nfcIndex)
             } else {
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))

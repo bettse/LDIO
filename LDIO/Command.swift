@@ -113,7 +113,7 @@ class WriteCommand : Command {
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(NFC \(nfcIndex) page 0x\(String(pageNumber, radix: 0x10)))"
+        return "\(me)(NFC \(nfcIndex) page 0x\(String(pageNumber, radix: 0x10)) => \(data))"
     }
 }
 
