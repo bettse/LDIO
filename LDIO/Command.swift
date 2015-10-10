@@ -134,13 +134,29 @@ class B1Command : Command {
     }
 }
 
-//Presence
 class PresenceCommand : Command {
     override init() {
         super.init()
         type = .Presence
         params = NSData()
     }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+class D4Command : Command {
+    override init(data: NSData) {
+        super.init()
+        type = .D4
+        if (data.length != 8) {
+            print("Incorrect length for \(type.desc()) command")
+        }
+        params = data
+    }
+
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!

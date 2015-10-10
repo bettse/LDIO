@@ -11,6 +11,8 @@ import Foundation
 class Response : Message {
     let corrolationIdIndex = 0
     var corrolationId : UInt8 = 0
+    let paramsIndex = 1
+    var params : NSData = NSData()
 
     //lol delegate
     var type : commandType {
@@ -44,6 +46,8 @@ class Response : Message {
             return B1Response(data: data)
         case .Presence:
             return PresenceResponse(data: data)
+        case .D4:
+            return D4Response(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -57,19 +61,15 @@ class Response : Message {
 }
 
 class ActivateResponse : Response {
-    var params : NSData
-    let paramsIndex = 1
-    
     override init(data: NSData) {
-        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
         super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
     }
 }
 
 
 class ReadResponse : Response {
     let pageDataIndex = 2
-
     var pageData : NSData
     
     //Delegates for easier access
@@ -131,15 +131,13 @@ class WriteResponse : Response {
 }
 
 class B1Response : Response {
-    var params : NSData
     var value : UInt64 = 0
-    let paramsIndex = 1
     
     override init(data: NSData) {
+        super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
         params.getBytes(&value, length: sizeof(value.dynamicType))
         value = value.bigEndian
-        super.init(data: data)
     }
     
     override var description: String {
@@ -149,12 +147,22 @@ class B1Response : Response {
 }
 
 class PresenceResponse : Response {
-    var params : NSData
-    let paramsIndex = 1
-    
     override init(data: NSData) {
-        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
         super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+
+class D4Response : Response {
+    override init(data: NSData) {
+        super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
     }
     
     override var description: String {

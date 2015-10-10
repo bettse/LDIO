@@ -24,7 +24,8 @@ class LegoReaderDriver : NSObject {
     var partialTokens : [UInt8:Token] = [:]
     
     var b1Value : UInt64 = 1
-
+    var d4Value : UInt64 = 0
+    
     override init() {
         super.init()
         NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceConnected:", name: "deviceConnected", object: nil)
@@ -87,12 +88,18 @@ class LegoReaderDriver : NSObject {
         */
         b1Value *= 2
     }
+
+    func d4Test() {
+        let d4data = NSMutableData(length: sizeof(b1Value.dynamicType))
+        d4data?.replaceBytesInRange(NSMakeRange(0, sizeof(d4Value.dynamicType)), withBytes: &d4Value)
+        reader.outputCommand(D4Command(data: NSData(data: d4data!)))
+        d4Value++
+    }
+
     
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
             print(response)
-            //Start testing b1 command
-            //NSTimer.scheduledTimerWithTimeInterval(2.0, target: self, selector: "b1Test", userInfo: nil, repeats: true)
         } else if let response = response as? ReadResponse {
             tokenRead(response)
         } else {
