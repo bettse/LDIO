@@ -156,7 +156,6 @@ class D4Command : Command {
         }
         params = data
     }
-
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
@@ -165,3 +164,53 @@ class D4Command : Command {
 }
 
 
+class Fade {
+    //XX YY ZZ RR GG BB
+    //YY = speed
+    //ZZ = count
+    let XX : UInt8 = 0x01
+    var speed: UInt8 = 1
+    var count: UInt8 = 1
+    var red : UInt8 = 0x99
+    var green : UInt8 = 0x42
+    var blue : UInt8 = 0x0e
+    
+    init(speed: Int, count: Int, color: NSColor) {
+        self.speed = UInt8(speed)
+        self.count = UInt8(count)
+        red = color.red
+        green = color.green
+        blue = color.blue
+    }
+    
+    func serialize() -> NSData {
+        return NSData(bytes: [XX, speed, count, red, green, blue] as [UInt8], length: 6)
+    }
+}
+
+class LightFadeAllCommand : Command {
+    var center : Fade
+    var left : Fade
+    var right : Fade
+    
+    init(center: Fade, left: Fade, right: Fade) {
+        self.center = center
+        self.left = left
+        self.right = right
+        super.init()
+        self.type = .LightFadeAll
+    }
+    
+    override func serialize() -> NSData {
+        let temp : NSMutableData = center.serialize().mutableCopy() as! NSMutableData
+        temp.appendData(left.serialize())
+        temp.appendData(right.serialize())
+        params = NSData(data: temp)
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}

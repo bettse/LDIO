@@ -48,6 +48,10 @@ class Response : Message {
             return PresenceResponse(data: data)
         case .D4:
             return D4Response(data: data)
+        case .LightFadeAll:
+            return LightFadeAllResponse(data: data)
+        case .LightFadeSingle:
+            return LightFadeSingleResponse(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -170,3 +174,7 @@ class D4Response : Response {
         return "\(me)(\(params))"
     }
 }
+
+class LightFadeAllResponse : Response {}
+class LightFadeSingleResponse : Response {}
+

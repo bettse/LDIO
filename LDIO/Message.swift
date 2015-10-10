@@ -18,8 +18,8 @@ class Message : CustomStringConvertible {
         case B1 = 0xB1
         case B3 = 0xB3
         case LightOn = 0xC0
-        case LightFade = 0xC2
-        case LightFlash = 0xC6
+        case LightFadeSingle = 0xC2
+        case LightFadeAll = 0xC6
         case Presence = 0xD0
         case Read = 0xD2
         case Write = 0xD3
