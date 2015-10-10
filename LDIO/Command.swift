@@ -135,10 +135,10 @@ class B1Command : Command {
 }
 
 //Presence
-class D0Command : Command {
+class PresenceCommand : Command {
     override init() {
         super.init()
-        type = .D0
+        type = .Presence
         params = NSData()
     }
     

@@ -42,8 +42,8 @@ class Response : Message {
             return WriteResponse(data: data)
         case .B1:
             return B1Response(data: data)
-        case .D0:
-            return D0Response(data: data)
+        case .Presence:
+            return PresenceResponse(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -148,7 +148,7 @@ class B1Response : Response {
     }
 }
 
-class D0Response : Response {
+class PresenceResponse : Response {
     var params : NSData
     let paramsIndex = 1
     
