@@ -42,8 +42,10 @@ class Response : Message {
             return ReadResponse(data: data)
         case .Write:
             return WriteResponse(data: data)
-        case .B1:
-            return B1Response(data: data)
+        case .Seed:
+            return SeedResponse(data: data)
+        case .Challenge:
+            return ChallengeResponse(data: data)
         case .Presence:
             return PresenceResponse(data: data)
         case .D4:
@@ -68,6 +70,11 @@ class ActivateResponse : Response {
     override init(data: NSData) {
         super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(Response \(params))"
     }
 }
 
@@ -134,19 +141,27 @@ class WriteResponse : Response {
     }
 }
 
-class B1Response : Response {
-    var value : UInt64 = 0
-    
+class SeedResponse : Response {
     override init(data: NSData) {
         super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
-        params.getBytes(&value, length: sizeof(value.dynamicType))
-        value = value.bigEndian
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(params) \(value))"
+        return "\(me)(\(params))"
+    }
+}
+
+class ChallengeResponse : Response {
+    override init(data: NSData) {
+        super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
     }
 }
 

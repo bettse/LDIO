@@ -25,7 +25,8 @@ class LegoReaderDriver : NSObject {
 
     var partialTokens : [UInt8:Token] = [:]
     
-    var b1Value : UInt64 = 1
+    var seedValue : UInt64 = 0
+    var challengeValue : UInt64 = 0
     var d4Value : UInt64 = 0
     
     override init() {
@@ -65,6 +66,7 @@ class LegoReaderDriver : NSObject {
     }
     
     func incomingUpdate(update: Update) {
+        print(update)
         if (update.direction == Update.Direction.Arriving) {
             partialTokens[update.nfcIndex] = Token(tagId: update.uid)
             reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
@@ -77,22 +79,20 @@ class LegoReaderDriver : NSObject {
         }
     }
 
-    func b1Test() {
-        let b1data = NSMutableData(length: sizeof(b1Value.dynamicType))
-        b1data?.replaceBytesInRange(NSMakeRange(0, sizeof(b1Value.dynamicType)), withBytes: &b1Value)
-        reader.outputCommand(B1Command(data: NSData(data: b1data!)))
-        /*
-        if (b1Value == 0) {
-            b1Value = UInt64.max
-        } else {
-            b1Value = 0
-        }
-        */
-        b1Value *= 2
+    func seedTest() {
+        let seedData = NSMutableData(length: sizeof(seedValue.dynamicType))
+        seedData?.replaceBytesInRange(NSMakeRange(0, sizeof(seedValue.dynamicType)), withBytes: &seedValue)
+        reader.outputCommand(SeedCommand(data: NSData(data: seedData!)))
+    }
+    
+    func challengeTest() {
+        let challengeData = NSMutableData(length: sizeof(challengeValue.dynamicType))
+        challengeData?.replaceBytesInRange(NSMakeRange(0, sizeof(challengeValue.dynamicType)), withBytes: &challengeValue)
+        reader.outputCommand(ChallengeCommand(data: NSData(data: challengeData!)))
     }
 
     func d4Test() {
-        let d4data = NSMutableData(length: sizeof(b1Value.dynamicType))
+        let d4data = NSMutableData(length: sizeof(d4Value.dynamicType))
         d4data?.replaceBytesInRange(NSMakeRange(0, sizeof(d4Value.dynamicType)), withBytes: &d4Value)
         reader.outputCommand(D4Command(data: NSData(data: d4data!)))
         d4Value++
@@ -111,6 +111,13 @@ class LegoReaderDriver : NSObject {
             reader.outputCommand(LightFadeAllCommand(center: center, left: left, right: right))
         } else if let response = response as? ReadResponse {
             tokenRead(response)
+        } else if let response = response as? SeedResponse {
+            print(response)
+            challengeTest()
+        } else if let response = response as? ChallengeResponse {
+            print(response)
+        } else if let _ = response as? D4Response {
+
         } else {
             print("Received \(response) for command \(response.command)", terminator: "\n")
         }
@@ -118,6 +125,7 @@ class LegoReaderDriver : NSObject {
     
     func tokenRead(response: ReadResponse) {
         if let token = partialTokens[response.nfcIndex] {
+            //print("\(response.pageNumber): \(response.pageData)")
             token.load(response.pageNumber, pageData: response.pageData)
             if (token.complete()) {
                 print("Complete token: \(token)")

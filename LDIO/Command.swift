@@ -118,10 +118,26 @@ class WriteCommand : Command {
 }
 
 
-class B1Command : Command {
+class SeedCommand : Command {
     override init(data: NSData) {
         super.init()
-        type = .B1
+        type = .Seed
+        if (data.length != 8) {
+            print("Incorrect length for Bee1 command")
+        }
+        params = data
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+class ChallengeCommand : Command {
+    override init(data: NSData) {
+        super.init()
+        type = .Challenge
         if (data.length != 8) {
             print("Incorrect length for Bee1 command")
         }
@@ -182,6 +198,8 @@ class Fade {
         green = color.green
         blue = color.blue
     }
+    
+    init() {}
     
     func serialize() -> NSData {
         return NSData(bytes: [XX, speed, count, red, green, blue] as [UInt8], length: 6)

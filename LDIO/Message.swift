@@ -15,8 +15,8 @@ import Foundation
 class Message : CustomStringConvertible {
     enum commandType : UInt8 {
         case Activate = 0xB0
-        case B1 = 0xB1
-        case B3 = 0xB3
+        case Seed = 0xB1
+        case Challenge = 0xB3
         case LightOn = 0xC0
         case LightFadeSingle = 0xC2
         case LightFadeAll = 0xC6
