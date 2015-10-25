@@ -102,18 +102,14 @@ class LegoReaderDriver : NSObject {
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
             print(response)
-            //reader.outputCommand(LightFlashCommand(data: NSData(fromHex: "f1 20 03 FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00")))
-            
             let center = Fade(speed: 1, count: 1, color: NSColor.redColor())
             let left = Fade(speed: 1, count: 1, color: NSColor.greenColor())
             let right = Fade(speed: 1, count: 1, color: NSColor.blueColor())
-            
             reader.outputCommand(LightFadeAllCommand(center: center, left: left, right: right))
         } else if let response = response as? ReadResponse {
             tokenRead(response)
         } else if let response = response as? SeedResponse {
             print(response)
-            challengeTest()
         } else if let response = response as? ChallengeResponse {
             print(response)
         } else if let _ = response as? D4Response {

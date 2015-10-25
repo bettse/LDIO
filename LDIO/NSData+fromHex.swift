@@ -28,4 +28,9 @@ public extension NSData {
             return result;
         }
     }
+    
+    func hexadecimalString() -> String {
+        let s = "\(self)".componentsSeparatedByString(" ").joinWithSeparator("")
+        return s
+    }
 }

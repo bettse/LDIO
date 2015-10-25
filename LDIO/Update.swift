@@ -41,6 +41,6 @@ class Update : Message {
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(ledPlatform.desc()) \(nfcIndex) \(direction.desc()) \(uid))"
+        return "\(me)(\(ledPlatform.desc()) \(nfcIndex) \(direction.desc()) \(uid.hexadecimalString()))"
     }
 }
