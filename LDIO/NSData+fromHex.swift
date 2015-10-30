@@ -30,7 +30,7 @@ public extension NSData {
     }
     
     func hexadecimalString() -> String {
-        let s = "\(self)".componentsSeparatedByString(" ").joinWithSeparator("")
+        let s = "\(self)".componentsSeparatedByString(" ").joinWithSeparator("").stringByTrimmingCharactersInSet(NSCharacterSet.init(charactersInString: "< >"))
         return s
     }
 }
