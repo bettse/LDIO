@@ -47,6 +47,6 @@ class Token : NTAG213 {
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(uid.hexadecimalString())::\(self.category) \(self.vehicleGadget))"
+        return "\(me)(\(uid.hexadecimalString())::\(secretPages))"
     }
 }
