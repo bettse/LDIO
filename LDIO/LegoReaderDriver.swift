@@ -25,7 +25,7 @@ class LegoReaderDriver : NSObject {
 
     var partialTokens : [UInt8:Token] = [:]
     
-    var seedValue : UInt64 = 0
+
     var challengeValue : UInt64 = 0
     var d4Value : UInt64 = 0
     
@@ -79,41 +79,56 @@ class LegoReaderDriver : NSObject {
         }
     }
 
-    func seedTest() {
+    func seedTest(value: UInt64) {
+        var seedValue = value
         let seedData = NSMutableData(length: sizeof(seedValue.dynamicType))
         seedData?.replaceBytesInRange(NSMakeRange(0, sizeof(seedValue.dynamicType)), withBytes: &seedValue)
-        reader.outputCommand(SeedCommand(data: NSData(data: seedData!)))
+        let cmd = SeedCommand(data: NSData(data: seedData!))
+        print(cmd)
+        reader.outputCommand(cmd)
     }
     
     func challengeTest() {
         let challengeData = NSMutableData(length: sizeof(challengeValue.dynamicType))
         challengeData?.replaceBytesInRange(NSMakeRange(0, sizeof(challengeValue.dynamicType)), withBytes: &challengeValue)
-        reader.outputCommand(ChallengeCommand(data: NSData(data: challengeData!)))
+        let cmd = ChallengeCommand(data: NSData(data: challengeData!))
+        print(cmd)
+        reader.outputCommand(cmd)
     }
 
     func d4Test() {
+        var date = NSDate().timeIntervalSince1970
+        //let d4data = NSData(fromHex: "e6 66 65 19 e5 bc 04 cb")
+        //let d4data = NSData(fromHex: "bb c9 3a 1b bc df e1 4d")
         let d4data = NSMutableData(length: sizeof(d4Value.dynamicType))
-        d4data?.replaceBytesInRange(NSMakeRange(0, sizeof(d4Value.dynamicType)), withBytes: &d4Value)
-        reader.outputCommand(D4Command(data: NSData(data: d4data!)))
-        d4Value++
+        //d4data?.replaceBytesInRange(NSMakeRange(0, sizeof(d4Value.dynamicType)), withBytes: &d4Value)
+        d4data?.replaceBytesInRange(NSMakeRange(0, sizeof(date.dynamicType)), withBytes: &date)
+        let cmd = D4Command(data: NSData(data: d4data!))
+        print(cmd)
+        reader.outputCommand(cmd)
     }
 
     
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
             print(response)
+        } else if let response = response as? SeedResponse {
+            print(response)
+            /*
             let center = Fade(speed: 1, count: 1, color: NSColor.redColor())
             let left = Fade(speed: 1, count: 1, color: NSColor.greenColor())
             let right = Fade(speed: 1, count: 1, color: NSColor.blueColor())
             reader.outputCommand(LightFadeAllCommand(center: center, left: left, right: right))
-        } else if let response = response as? ReadResponse {
-            tokenRead(response)
-        } else if let response = response as? SeedResponse {
-            print(response)
+            */
         } else if let response = response as? ChallengeResponse {
             print(response)
-        } else if let _ = response as? D4Response {
-
+        } else if let response = response as? ReadResponse {
+            tokenRead(response)
+        } else if let response = response as? WriteResponse {
+            //Re-read the written page
+            reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: response.pageNumber))
+        } else if let response = response as? D4Response {
+            print(response)
         } else {
             print("Received \(response) for command \(response.command)", terminator: "\n")
         }
@@ -130,13 +145,24 @@ class LegoReaderDriver : NSObject {
                         callback(Message.LedPlatform.All, Int(response.nfcIndex), token)
                     }
                 })
-                /*
-                var vgtype : UInt32 = 1015
-                let data : NSMutableData = NSMutableData(capacity: sizeof(vgtype.dynamicType))!
-                data.replaceBytesInRange(NSMakeRange(0, sizeof(vgtype.dynamicType)), withBytes: &vgtype)
-                let write = WriteCommand(nfcIndex: response.nfcIndex, page: 0x24, data: NSData(data: data))
-                reader.outputCommand(write)
-                */
+
+                let writeVg = false
+                if (writeVg) {
+                    var vgtype : UInt32 = 1081
+                    let data : NSMutableData = NSMutableData(capacity: NTAG213.pageSize)!
+                    data.replaceBytesInRange(NSMakeRange(0, sizeof(vgtype.dynamicType)), withBytes: &vgtype)
+                    let write = WriteCommand(nfcIndex: response.nfcIndex, page: 0x24, data: NSData(data: data))
+                    reader.outputCommand(write)
+                }
+                
+                let writeType = false
+                if (writeType) {
+                    var t : UInt16 = UInt16(1).bigEndian
+                    let tdata : NSMutableData = NSMutableData(length: NTAG213.pageSize)!
+                    tdata.replaceBytesInRange(NSMakeRange(0, sizeof(t.dynamicType)), withBytes: &t)
+                    let write = WriteCommand(nfcIndex: response.nfcIndex, page: 0x26, data: NSData(data: tdata))
+                    reader.outputCommand(write)
+                }
                 partialTokens.removeValueForKey(response.nfcIndex)
             } else {
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))
