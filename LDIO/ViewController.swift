@@ -23,12 +23,8 @@ class ViewController: NSViewController {
 
         // Do any additional setup after loading the view.
         readerDriver.registerTokenLoaded { (ledPlatform, nfcIndex, token) -> Void in
-            let attr = NSAttributedString.init(string: token.uid.hexadecimalString())
-            
+            let attr = NSAttributedString.init(string: "\(token.uid.hexadecimalString())\n")            
             self.textField.textStorage?.appendAttributedString(attr)
-            
-            
-        
         }
 
     }

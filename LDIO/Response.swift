@@ -54,6 +54,8 @@ class Response : Message {
             return LightFadeAllResponse(data: data)
         case .LightFadeSingle:
             return LightFadeSingleResponse(data: data)
+        case .LightFlashAll:
+            return LightFlashAllResponse(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -192,4 +194,4 @@ class D4Response : Response {
 
 class LightFadeAllResponse : Response {}
 class LightFadeSingleResponse : Response {}
-
+class LightFlashAllResponse : Response {}

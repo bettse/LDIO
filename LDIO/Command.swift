@@ -232,3 +232,50 @@ class LightFadeAllCommand : Command {
         return "\(me)(\(params))"
     }
 }
+
+class Flash {
+    var count: UInt8 = 1
+    var red : UInt8 = 0x99
+    var green : UInt8 = 0x42
+    var blue : UInt8 = 0x0e
+    
+    init(count: Int, color: NSColor) {
+        self.count = UInt8(count)
+        red = color.red
+        green = color.green
+        blue = color.blue
+    }
+    
+    init() {}
+    
+    func serialize() -> NSData {
+        return NSData(bytes: [count, red, green, blue] as [UInt8], length: 4)
+    }
+}
+
+class LightFlashAllCommand : Command {
+    var center : Flash
+    var left : Flash
+    var right : Flash
+    
+    init(center: Flash, left: Flash, right: Flash) {
+        self.center = center
+        self.left = left
+        self.right = right
+        super.init()
+        self.type = .LightFlashAll
+    }
+    
+    override func serialize() -> NSData {
+        let temp : NSMutableData = center.serialize().mutableCopy() as! NSMutableData
+        temp.appendData(left.serialize())
+        temp.appendData(right.serialize())
+        params = NSData(data: temp)
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
