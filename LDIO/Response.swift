@@ -50,6 +50,8 @@ class Response : Message {
             return PresenceResponse(data: data)
         case .D4:
             return D4Response(data: data)
+        case .LightOn:
+            return LightOnResponse(data: data)
         case .LightFadeAll:
             return LightFadeAllResponse(data: data)
         case .LightFadeSingle:
@@ -192,6 +194,7 @@ class D4Response : Response {
     }
 }
 
+class LightOnResponse : Response {}
 class LightFadeAllResponse : Response {}
 class LightFadeSingleResponse : Response {}
 class LightFlashAllResponse : Response {}

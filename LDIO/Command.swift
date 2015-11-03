@@ -180,6 +180,32 @@ class D4Command : Command {
 }
 
 
+class LightOnCommand : Command {
+    var red : UInt8 = 0x99
+    var green : UInt8 = 0x42
+    var blue : UInt8 = 0x0e
+    var platform : Message.LedPlatform = Message.LedPlatform.All
+    
+    init(platform: Message.LedPlatform, color: NSColor) {
+        self.platform = platform
+        red = color.red
+        green = color.green
+        blue = color.blue
+        super.init()
+        self.type = .LightOn
+    }
+    
+    override func serialize() -> NSData {
+        params = NSData(bytes: [platform.rawValue, red, green, blue] as [UInt8], length: 4)
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
 class Fade {
     //XX YY ZZ RR GG BB
     //YY = speed
