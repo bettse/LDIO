@@ -305,3 +305,23 @@ class LightFlashAllCommand : Command {
         return "\(me)(\(params))"
     }
 }
+
+class E1Command : Command {
+    var nfcIndex : UInt8
+    
+    init(nfcIndex: UInt8) {
+        self.nfcIndex = nfcIndex
+        super.init()
+        self.type = .E1
+    }
+    
+    override func serialize() -> NSData {
+        params = NSData(bytes: [nfcIndex] as [UInt8], length: 1)
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}

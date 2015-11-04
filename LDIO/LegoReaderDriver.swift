@@ -76,8 +76,9 @@ class LegoReaderDriver : NSObject {
                     callback(update.ledPlatform, Int(update.nfcIndex), token)
                 }
             })
+            reader.outputCommand(E1Command(nfcIndex: update.nfcIndex))
             partialTokens[update.nfcIndex] = token
-            reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
+            //reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {
                 for callback in self.leftTokenCallbacks {

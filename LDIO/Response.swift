@@ -58,6 +58,8 @@ class Response : Message {
             return LightFadeSingleResponse(data: data)
         case .LightFlashAll:
             return LightFlashAllResponse(data: data)
+        case .E1:
+            return E1Response(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -198,3 +200,15 @@ class LightOnResponse : Response {}
 class LightFadeAllResponse : Response {}
 class LightFadeSingleResponse : Response {}
 class LightFlashAllResponse : Response {}
+
+class E1Response : Response {
+    override init(data: NSData) {
+        super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
