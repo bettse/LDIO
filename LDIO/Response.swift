@@ -58,8 +58,8 @@ class Response : Message {
             return LightFadeSingleResponse(data: data)
         case .LightFlashAll:
             return LightFlashAllResponse(data: data)
-        case .C4:
-            return C4Response(data: data)
+        case .LightFadeRandom:
+            return LightFadeRandomResponse(data: data)
         case .E1:
             return E1Response(data: data)
         default:
@@ -202,7 +202,7 @@ class LightOnResponse : Response {}
 class LightFadeAllResponse : Response {}
 class LightFadeSingleResponse : Response {}
 class LightFlashAllResponse : Response {}
-class C4Response : Response {}
+class LightFadeRandomResponse : Response {}
 
 class E1Response : Response {
     override init(data: NSData) {

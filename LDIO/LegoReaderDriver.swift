@@ -108,7 +108,7 @@ class LegoReaderDriver : NSObject {
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
             print(response)
-            reader.outputCommand(C4Command(ledPlatform: Message.LedPlatform.Center, speed: 10, count: 0))
+            reader.outputCommand(LightFadeRandomCommand(ledPlatform: Message.LedPlatform.Center, speed: 10, count: 0))
             /*
             reader.outputCommand(LightOnCommand(platform: Message.LedPlatform.Center, color: NSColor.orangeColor()))
             */

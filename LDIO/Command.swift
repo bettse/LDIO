@@ -326,7 +326,7 @@ class E1Command : Command {
     }
 }
 
-class C4Command : Command {
+class LightFadeRandomCommand : Command {
     var ledPlatform : Message.LedPlatform = Message.LedPlatform.All
     var speed : UInt8 = 1
     var count : UInt8 = 1
@@ -336,7 +336,7 @@ class C4Command : Command {
         self.speed = speed
         self.count = count
         super.init()
-        self.type = .C4
+        self.type = .LightFadeRandom
     }
     
     override func serialize() -> NSData {
