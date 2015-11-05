@@ -325,3 +325,27 @@ class E1Command : Command {
         return "\(me)(\(params))"
     }
 }
+
+class C4Command : Command {
+    var ledPlatform : Message.LedPlatform = Message.LedPlatform.All
+    var speed : UInt8 = 1
+    var count : UInt8 = 1
+    
+    init(ledPlatform: Message.LedPlatform, speed: UInt8, count: UInt8) {
+        self.ledPlatform = ledPlatform
+        self.speed = speed
+        self.count = count
+        super.init()
+        self.type = .C4
+    }
+    
+    override func serialize() -> NSData {
+        params = NSData(bytes: [ledPlatform.rawValue, speed, count] as [UInt8], length: 3)
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
