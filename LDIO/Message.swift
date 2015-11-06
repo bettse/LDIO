@@ -18,8 +18,10 @@ class Message : CustomStringConvertible {
         case Seed = 0xB1
         case Challenge = 0xB3
         case LightOn = 0xC0
+        case C1 = 0xC1
         case LightFadeSingle = 0xC2
         case LightFadeRandom = 0xC4
+        case C5 = 0xC5
         case LightFadeAll = 0xC6
         case LightFlashAll = 0xC8
         case Presence = 0xD0

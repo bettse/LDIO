@@ -50,6 +50,8 @@ class Response : Message {
             return PresenceResponse(data: data)
         case .D4:
             return D4Response(data: data)
+        case .C1:
+            return C1Response(data: data)
         case .LightOn:
             return LightOnResponse(data: data)
         case .LightFadeAll:
@@ -60,6 +62,8 @@ class Response : Message {
             return LightFlashAllResponse(data: data)
         case .LightFadeRandom:
             return LightFadeRandomResponse(data: data)
+        case .C5:
+            return C5Response(data: data)
         case .E1:
             return E1Response(data: data)
         default:
@@ -205,6 +209,39 @@ class LightFlashAllResponse : Response {}
 class LightFadeRandomResponse : Response {}
 
 class E1Response : Response {
+    var nfcIndex : UInt8  {
+        get {
+            if let command = command as? E1Command {
+                return command.nfcIndex
+            }
+            return 0
+        }
+    }
+    
+    override init(data: NSData) {
+        super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(String(self.nfcIndex, radix: 0x10)) -> \(params))"
+    }
+}
+
+class C5Response : Response {
+    override init(data: NSData) {
+        super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+class C1Response : Response {
     override init(data: NSData) {
         super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))

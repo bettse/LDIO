@@ -349,3 +349,39 @@ class LightFadeRandomCommand : Command {
         return "\(me)(\(params))"
     }
 }
+
+class C5Command : Command {
+    override init() {
+        super.init()
+        self.type = .C5
+    }
+    
+    override func serialize() -> NSData {
+        params = NSData()
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}
+
+class C1Command : Command {
+    var ledPlatform : Message.LedPlatform = Message.LedPlatform.Center
+    
+    init(ledPlatform: Message.LedPlatform) {
+        super.init()
+        self.type = .C1
+    }
+    
+    override func serialize() -> NSData {
+        params = NSData(bytes: [ledPlatform.rawValue] as [UInt8], length: 1)
+        return super.serialize()
+    }
+    
+    override var description: String {
+        let me = String(self.dynamicType).componentsSeparatedByString(".").last!
+        return "\(me)(\(params))"
+    }
+}

@@ -25,7 +25,6 @@ class LegoReaderDriver : NSObject {
     var leftTokenCallbacks : [tokenLeft] = []
 
     var partialTokens : [UInt8:Token] = [:]
-    
 
     var challengeValue : UInt64 = 0
     var d4Value : UInt64 = 0
@@ -76,7 +75,6 @@ class LegoReaderDriver : NSObject {
                     callback(update.ledPlatform, Int(update.nfcIndex), token)
                 }
             })
-            //reader.outputCommand(E1Command(nfcIndex: update.nfcIndex))
             partialTokens[update.nfcIndex] = token
             reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
@@ -108,24 +106,6 @@ class LegoReaderDriver : NSObject {
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
             print(response)
-            reader.outputCommand(LightFadeRandomCommand(ledPlatform: Message.LedPlatform.Center, speed: 10, count: 0))
-            /*
-            reader.outputCommand(LightOnCommand(platform: Message.LedPlatform.Center, color: NSColor.orangeColor()))
-            */
-            
-            /*
-            let center = Flash(count: 1, color: NSColor.redColor())
-            let left = Flash(count: 1, color: NSColor.greenColor())
-            let right = Flash(count: 1, color: NSColor.blueColor())
-            reader.outputCommand(LightFlashAllCommand(center: center, left: left, right: right))
-            */
-
-            /*
-            let center = Fade(speed: 1, count: 1, color: NSColor.redColor())
-            let left = Fade(speed: 1, count: 1, color: NSColor.greenColor())
-            let right = Fade(speed: 1, count: 1, color: NSColor.blueColor())
-            reader.outputCommand(LightFadeAllCommand(center: center, left: left, right: right))
-            */
         } else if let response = response as? SeedResponse {
             print(response)
         } else if let response = response as? ChallengeResponse {
@@ -137,8 +117,12 @@ class LegoReaderDriver : NSObject {
             reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: response.pageNumber))
         } else if let response = response as? D4Response {
             print(response)
+        } else if let response = response as? E1Response {
+            print(response)
+        } else if let response = response as? LightOnResponse {
+            print(response)
         } else {
-            print("Received \(response) for command \(response.command)", terminator: "\n")
+            print("Received \(response) for command \(response.command)")
         }
     }
     
