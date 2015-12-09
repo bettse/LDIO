@@ -14,7 +14,7 @@ class NTAG213 : CustomStringConvertible {
     static let tokenSize : Int = pageSize * pageCount
     static let uidLength = 7
     static let userMemoryPage = 0x04
-    static let userMemoryLength = 144 //bytes
+    static let userMemoryLength = 36 //pages
     static let cfg0Page = 0x29
     static let cfg1Page = 0x2A
 
@@ -22,17 +22,39 @@ class NTAG213 : CustomStringConvertible {
     var data : NSMutableData = NSMutableData()
     
     var uid : NSData {
-        get {
-            return tagId
-        }
+        return tagId
     }
     
     var userMemory : NSData {
-        get {
-            return pageRange(NTAG213.userMemoryPage, pageCount: NTAG213.userMemoryLength)
-        }
+        return pageRange(NTAG213.userMemoryPage, pageCount: NTAG213.userMemoryLength)
     }
     
+    var capabilityContainer : NSData {
+        return page(3)
+    }
+    
+    var isNdef : Bool {
+        var value : UInt8 = 0
+        capabilityContainer.getBytes(&value, range: NSMakeRange(0, 1))
+        return value == NDEF.magicByte
+    }
+    
+    var ndefVer : UInt8 {
+        var value : UInt8 = 0
+        capabilityContainer.getBytes(&value, range: NSMakeRange(1, 1))
+        return value
+    }
+    
+    var ndefLength : Int {
+        var length : UInt8 = 0
+        capabilityContainer.getBytes(&length, range: NSMakeRange(2, 1))
+        return Int(length) * 8 //8.5.4 table 4
+    }
+    
+    var ndefData : NSData {
+        return userMemory.subdataWithRange(NSMakeRange(0, ndefLength))
+    }
+        
     var dynamicLockBytes : NSData {
         get {
             return page(0x28)

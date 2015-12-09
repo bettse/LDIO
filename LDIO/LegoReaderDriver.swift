@@ -10,7 +10,7 @@ import Foundation
 import AppKit
 
 
-typealias tokenLoad = (Message.LedPlatform, Int, Token) -> Void
+typealias tokenLoad = (Message.LedPlatform, Int, NTAG213) -> Void
 typealias tokenLeft = (Message.LedPlatform, Int) -> Void
 
 class LegoReaderDriver : NSObject {
@@ -24,7 +24,7 @@ class LegoReaderDriver : NSObject {
     var loadTokenCallbacks : [tokenLoad] = []
     var leftTokenCallbacks : [tokenLeft] = []
 
-    var partialTokens : [UInt8:Token] = [:]
+    var partialTokens : [UInt8:NTAG213] = [:]
 
     var challengeValue : UInt64 = 0
     var d4Value : UInt64 = 0
@@ -69,7 +69,7 @@ class LegoReaderDriver : NSObject {
     func incomingUpdate(update: Update) {
         print(update)
         if (update.direction == Update.Direction.Arriving) {
-            let token = Token(tagId: update.uid)
+            let token = NTAG213(tagId: update.uid)
             dispatch_async(dispatch_get_main_queue(), {
                 for callback in self.loadTokenCallbacks {
                     callback(update.ledPlatform, Int(update.nfcIndex), token)
@@ -142,39 +142,11 @@ class LegoReaderDriver : NSObject {
         } //end if token
     }
     
-    func tokenComplete(token: Token, nfcIndex: UInt8) {
-        print("Complete token: \(token.data)")
-        
-        let writeVg = false
-        if (writeVg) {
-            var vgtype : UInt32 = 1081
-            let data : NSMutableData = NSMutableData(capacity: NTAG213.pageSize)!
-            data.replaceBytesInRange(NSMakeRange(0, sizeof(vgtype.dynamicType)), withBytes: &vgtype)
-            let write = WriteCommand(nfcIndex: nfcIndex, page: 0x24, data: NSData(data: data))
-            reader.outputCommand(write)
-        }
-        
-        let writeType = false
-        if (writeType) {
-            var t : UInt16 = UInt16(1).bigEndian
-            let tdata : NSMutableData = NSMutableData(length: NTAG213.pageSize)!
-            tdata.replaceBytesInRange(NSMakeRange(0, sizeof(t.dynamicType)), withBytes: &t)
-            let write = WriteCommand(nfcIndex: nfcIndex, page: 0x26, data: NSData(data: tdata))
-            reader.outputCommand(write)
-        }
-        
-        let writeBatman = false
-        //0x24: 0x1bf4d330
-        //0x25: 0xc2b986bc
-        //0x26: 0x0
-        if (writeBatman) {
-            var t : UInt32 = UInt32(0).bigEndian
-            let tdata : NSMutableData = NSMutableData(length: NTAG213.pageSize)!
-            tdata.replaceBytesInRange(NSMakeRange(0, sizeof(t.dynamicType)), withBytes: &t)
-            let write = WriteCommand(nfcIndex: nfcIndex, page: 0x26, data: NSData(data: tdata))
-            reader.outputCommand(write)
+    func tokenComplete(token: NTAG213, nfcIndex: UInt8) {
+        if token.isNdef {
+            let message = NdefMessage(data: token.ndefData)
+            print("Complete token: \(message.ndefRecords)")
         }
 
-        
     }
 }

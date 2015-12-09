@@ -17,15 +17,13 @@ public extension NSData {
         
     }
     
-    subscript(origin: Int) -> UnsafePointer<UInt8> {
+    subscript(origin: Int) -> UInt8 {
         get {
-            var result: UnsafePointer<UInt8> = nil;
+            var result: UInt8 = 0;
             if (origin < self.length) {
-                let newLength = self.length - origin;
-                let tempData = self.subdataWithRange(NSMakeRange(origin, newLength));
-                result = UnsafePointer<UInt8>(tempData.bytes);
+                self.getBytes(&result, range: NSMakeRange(origin, 1))
             }
-            return result;
+            return result
         }
     }
     
