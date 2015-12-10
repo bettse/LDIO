@@ -33,7 +33,7 @@ class NTAG213 : CustomStringConvertible {
         return page(3)
     }
     
-    var isNdef : Bool {
+    var hasNdef : Bool {
         var value : UInt8 = 0
         capabilityContainer.getBytes(&value, range: NSMakeRange(0, 1))
         return value == NDEF.magicByte
@@ -53,6 +53,10 @@ class NTAG213 : CustomStringConvertible {
     
     var ndefData : NSData {
         return userMemory.subdataWithRange(NSMakeRange(0, ndefLength))
+    }
+    
+    var ndefMessage : NDEF.Message {
+       return NDEF.Message(data: ndefData)
     }
         
     var dynamicLockBytes : NSData {
