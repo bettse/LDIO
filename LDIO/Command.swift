@@ -164,6 +164,8 @@ class PresenceCommand : Command {
 }
 
 class D4Command : Command {
+    
+    let tea = TEA()
     override init(data: NSData) {
         super.init()
         type = .D4

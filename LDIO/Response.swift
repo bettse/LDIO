@@ -154,26 +154,38 @@ class WriteResponse : Response {
 }
 
 class SeedResponse : Response {
+    let tea = TEA()
+    var x : UInt32 = 0
+    var y : UInt32 = 0
+    
     override init(data: NSData) {
         super.init(data: data)
-        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        params = tea.decrypt(data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex)))
+        params.getBytes(&x, range: NSMakeRange(0, sizeof(UInt32)))
+        params.getBytes(&y, range: NSMakeRange(4, sizeof(UInt32)))
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(params))"
+        return "\(me)(\(x) \(y))"
     }
 }
 
 class ChallengeResponse : Response {
+    let tea = TEA()
+    var x : UInt32 = 0
+    var y : UInt32 = 0
+    
     override init(data: NSData) {
         super.init(data: data)
-        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        params = tea.decrypt(data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex)))
+        params.getBytes(&x, range: NSMakeRange(0, sizeof(UInt32)))
+        params.getBytes(&y, range: NSMakeRange(4, sizeof(UInt32)))
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(params))"
+        return "\(me)(\(x) \(y))"
     }
 }
 
@@ -191,14 +203,23 @@ class PresenceResponse : Response {
 
 
 class D4Response : Response {
+    let tea = TEA()
+    var status : UInt8 = 0
+    var modelId : UInt8 = 0
+    var prng : UInt32 = 0
+    
     override init(data: NSData) {
         super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        status = params[0]
+        let decoded = params.subdataWithRange(NSMakeRange(1, 8))
+        modelId = decoded[0]
+        decoded.getBytes(&prng, range: NSMakeRange(4, sizeof(UInt32)))
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(params))"
+        return "\(me)(\(modelId))"
     }
 }
 

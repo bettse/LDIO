@@ -25,9 +25,7 @@ class LegoReaderDriver : NSObject {
     var leftTokenCallbacks : [tokenLeft] = []
 
     var partialTokens : [UInt8:NTAG213] = [:]
-
-    var challengeValue : UInt64 = 0
-    var d4Value : UInt64 = 0
+    let tea : TEA = TEA()
     
     override init() {
         super.init()
@@ -84,23 +82,6 @@ class LegoReaderDriver : NSObject {
                 }
             })
         }
-    }
-
-    func seedTest(value: UInt64) {
-        var seedValue = value.bigEndian
-        let seedData = NSMutableData(length: sizeof(seedValue.dynamicType))
-        seedData?.replaceBytesInRange(NSMakeRange(0, sizeof(seedValue.dynamicType)), withBytes: &seedValue)
-        let cmd = SeedCommand(data: NSData(data: seedData!))
-        print(cmd)
-        reader.outputCommand(cmd)
-    }
-    
-    func challengeTest() {
-        let challengeData = NSMutableData(length: sizeof(challengeValue.dynamicType))
-        challengeData?.replaceBytesInRange(NSMakeRange(0, sizeof(challengeValue.dynamicType)), withBytes: &challengeValue)
-        let cmd = ChallengeCommand(data: NSData(data: challengeData!))
-        print(cmd)
-        reader.outputCommand(cmd)
     }
     
     func incomingResponse(response: Response) {
