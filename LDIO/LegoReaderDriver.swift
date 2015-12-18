@@ -26,6 +26,7 @@ class LegoReaderDriver : NSObject {
 
     var partialTokens : [UInt8:NTAG213] = [:]
     let tea : TEA = TEA()
+    let mb = ModifiedBurtle(seed: 0)
     
     override init() {
         super.init()
@@ -93,6 +94,8 @@ class LegoReaderDriver : NSObject {
             reader.outputCommand(ChallengeCommand(x: 0, y: 0))
         } else if let response = response as? ChallengeResponse {
             print(response)
+
+            print("Modified Burtle = \(String(mb.value(), radix: 0x10))")
         } else if let response = response as? ReadResponse {
             tokenRead(response)
         } else if let response = response as? WriteResponse {

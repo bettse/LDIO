@@ -18,6 +18,7 @@
 		6D5052161BC8B905000D4BCB /* NSColor+hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5052151BC8B905000D4BCB /* NSColor+hex.swift */; };
 		6D6549011BBB6D670018500C /* NSData+fromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6549001BBB6D670018500C /* NSData+fromHex.swift */; };
 		6D7E2CE11C23B88300EC553A /* TEA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7E2CE01C23B88300EC553A /* TEA.swift */; };
+		6D7E2CE31C23C24C00EC553A /* ModifiedBurtle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7E2CE21C23C24C00EC553A /* ModifiedBurtle.swift */; };
 		6DC3F1341BC08C0200DB31D5 /* Command.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1301BC08C0200DB31D5 /* Command.swift */; };
 		6DC3F1351BC08C0200DB31D5 /* Report.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1311BC08C0200DB31D5 /* Report.swift */; };
 		6DC3F1361BC08C0200DB31D5 /* Response.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1321BC08C0200DB31D5 /* Response.swift */; };
@@ -40,6 +41,7 @@
 		6D5052151BC8B905000D4BCB /* NSColor+hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+hex.swift"; sourceTree = "<group>"; };
 		6D6549001BBB6D670018500C /* NSData+fromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+fromHex.swift"; sourceTree = "<group>"; };
 		6D7E2CE01C23B88300EC553A /* TEA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TEA.swift; sourceTree = "<group>"; };
+		6D7E2CE21C23C24C00EC553A /* ModifiedBurtle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModifiedBurtle.swift; sourceTree = "<group>"; };
 		6DC3F1301BC08C0200DB31D5 /* Command.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Command.swift; sourceTree = "<group>"; };
 		6DC3F1311BC08C0200DB31D5 /* Report.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Report.swift; sourceTree = "<group>"; };
 		6DC3F1321BC08C0200DB31D5 /* Response.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Response.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				6D4F1B981BB843A0004149DE /* LegoReader.swift */,
 				6D12EBDA1BBA4E8B00D6D49E /* LegoReaderDriver.swift */,
 				6D7E2CE01C23B88300EC553A /* TEA.swift */,
+				6D7E2CE21C23C24C00EC553A /* ModifiedBurtle.swift */,
 				6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */,
 				6D0119021BC4BC5F004758FA /* Token.swift */,
 				6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */,
@@ -191,6 +194,7 @@
 				6D12EBDB1BBA4E8B00D6D49E /* LegoReaderDriver.swift in Sources */,
 				6D0119031BC4BC5F004758FA /* Token.swift in Sources */,
 				6D7E2CE11C23B88300EC553A /* TEA.swift in Sources */,
+				6D7E2CE31C23C24C00EC553A /* ModifiedBurtle.swift in Sources */,
 				6DC3F13A1BC0971D00DB31D5 /* NTAG213.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
