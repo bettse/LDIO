@@ -75,7 +75,7 @@ class LegoReaderDriver : NSObject {
                 }
             })
             partialTokens[update.nfcIndex] = token
-            reader.outputCommand(ModelCommand(nfcIndex: update.nfcIndex))
+            //reader.outputCommand(ModelCommand(nfcIndex: update.nfcIndex))
             //reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {
@@ -95,8 +95,8 @@ class LegoReaderDriver : NSObject {
             reader.outputCommand(ChallengeCommand(x: 0, y: 0))
         } else if let response = response as? ChallengeResponse {
             print(response)
-
             print("Modified Burtle = \(String(mb.value(), radix: 0x10))")
+            reader.outputCommand(ModelCommand(nfcIndex: UInt8(0)))
         } else if let response = response as? ReadResponse {
             tokenRead(response)
         } else if let response = response as? WriteResponse {

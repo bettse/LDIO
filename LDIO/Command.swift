@@ -189,7 +189,7 @@ class ModelCommand : Command {
     
     convenience init(nfcIndex: UInt8) {
         let tea = TEA()
-        let y : UInt32 = 0 //value that gets returned in response
+        let y : UInt32 = 0 //value that gets returned in response as second 4 bytes
         let x = UInt32(nfcIndex)
         let d : NSData = tea.encrypt([x, y])
         self.init(data: d)

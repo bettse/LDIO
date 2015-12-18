@@ -216,12 +216,13 @@ class ModelResponse : Response {
         status = params[0]
         let decoded : NSData = tea.decrypt(params.subdataWithRange(NSMakeRange(1, 8)))
         modelId = decoded[0]
-        decoded.getBytes(&prng, range: NSMakeRange(4, sizeof(UInt32)))
+        decoded.getBytes(&prng, range: NSMakeRange(1, 3))
+        print(decoded)
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(Status:\(status) model:\(modelId))"
+        return "\(me)(Status:\(status) model:\(modelId) prng = \(prng))"
     }
 }
 
