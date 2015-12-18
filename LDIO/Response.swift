@@ -214,14 +214,14 @@ class D4Response : Response {
         super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
         status = params[0]
-        let decoded = params.subdataWithRange(NSMakeRange(1, 8))
+        let decoded : NSData = tea.decrypt(params.subdataWithRange(NSMakeRange(1, 8)))
         modelId = decoded[0]
         decoded.getBytes(&prng, range: NSMakeRange(4, sizeof(UInt32)))
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(modelId))"
+        return "\(me)(Status:\(status) model:\(modelId))"
     }
 }
 
