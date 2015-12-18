@@ -75,7 +75,7 @@ class LegoReaderDriver : NSObject {
                 }
             })
             partialTokens[update.nfcIndex] = token
-            reader.outputCommand(D4Command(nfcIndex: update.nfcIndex))
+            reader.outputCommand(ModelCommand(nfcIndex: update.nfcIndex))
             //reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {
@@ -102,7 +102,7 @@ class LegoReaderDriver : NSObject {
         } else if let response = response as? WriteResponse {
             //Re-read the written page
             reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: response.pageNumber))
-        } else if let response = response as? D4Response {
+        } else if let response = response as? ModelResponse {
             print(response)
         } else if let response = response as? E1Response {
             print(response)

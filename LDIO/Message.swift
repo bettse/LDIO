@@ -27,7 +27,7 @@ class Message : CustomStringConvertible {
         case Presence = 0xD0
         case Read = 0xD2
         case Write = 0xD3
-        case D4 = 0xD4
+        case Model = 0xD4
         case E1 = 0xE1
         case E5 = 0xE5
         func desc() -> String {

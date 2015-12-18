@@ -48,8 +48,8 @@ class Response : Message {
             return ChallengeResponse(data: data)
         case .Presence:
             return PresenceResponse(data: data)
-        case .D4:
-            return D4Response(data: data)
+        case .Model:
+            return ModelResponse(data: data)
         case .C1:
             return C1Response(data: data)
         case .LightOn:
@@ -204,7 +204,7 @@ class PresenceResponse : Response {
 }
 
 
-class D4Response : Response {
+class ModelResponse : Response {
     let tea = TEA()
     var status : UInt8 = 0
     var modelId : UInt8 = 0

@@ -175,12 +175,12 @@ class PresenceCommand : Command {
     }
 }
 
-class D4Command : Command {
+class ModelCommand : Command {
     let tea = TEA()
     
     override init(data: NSData) {
         super.init()
-        type = .D4
+        type = .Model
         if (data.length != 8) {
             print("Incorrect length for \(type.desc()) command")
         }
