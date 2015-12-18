@@ -87,8 +87,10 @@ class LegoReaderDriver : NSObject {
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
             print(response)
+            reader.outputCommand(SeedCommand(x: 0, y: 0))
         } else if let response = response as? SeedResponse {
             print(response)
+            reader.outputCommand(ChallengeCommand(x: 0, y: 0))
         } else if let response = response as? ChallengeResponse {
             print(response)
         } else if let response = response as? ReadResponse {

@@ -128,6 +128,12 @@ class SeedCommand : Command {
         params = data
     }
     
+    convenience init(x: UInt32, y: UInt32) {
+        let tea = TEA()
+        let d = tea.encrypt([x, y])
+        self.init(data: d)
+    }
+    
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
         return "\(me)(\(params))"
@@ -142,6 +148,12 @@ class ChallengeCommand : Command {
             print("Incorrect length for Bee1 command")
         }
         params = data
+    }
+
+    convenience init(x: UInt32, y: UInt32) {
+        let tea = TEA()
+        let d = tea.encrypt([x, y])
+        self.init(data: d)
     }
     
     override var description: String {
@@ -164,8 +176,8 @@ class PresenceCommand : Command {
 }
 
 class D4Command : Command {
-    
     let tea = TEA()
+    
     override init(data: NSData) {
         super.init()
         type = .D4
@@ -174,6 +186,8 @@ class D4Command : Command {
         }
         params = data
     }
+    
+    //Needs init that takes nfcIndex
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!

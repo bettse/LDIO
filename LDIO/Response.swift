@@ -160,14 +160,15 @@ class SeedResponse : Response {
     
     override init(data: NSData) {
         super.init(data: data)
-        params = tea.decrypt(data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex)))
-        params.getBytes(&x, range: NSMakeRange(0, sizeof(UInt32)))
-        params.getBytes(&y, range: NSMakeRange(4, sizeof(UInt32)))
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        let values : [UInt32] = tea.decrypt(params)
+        x = values[0]
+        y = values[1]
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(x) \(y))"
+        return "\(me)(\(String(x, radix: 0x10)) \(String(y, radix: 0x10)))"
     }
 }
 
@@ -178,14 +179,15 @@ class ChallengeResponse : Response {
     
     override init(data: NSData) {
         super.init(data: data)
-        params = tea.decrypt(data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex)))
-        params.getBytes(&x, range: NSMakeRange(0, sizeof(UInt32)))
-        params.getBytes(&y, range: NSMakeRange(4, sizeof(UInt32)))
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        let values : [UInt32] = tea.decrypt(params)
+        x = values[0]
+        y = values[1]
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(x) \(y))"
+        return "\(me)(\(String(x, radix: 0x10)) \(String(y, radix: 0x10)))"
     }
 }
 
