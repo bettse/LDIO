@@ -23,9 +23,5 @@ if __name__ == "__main__":
     b = BurtleRandom(0)
     for r in range(1, 6):
         v = b.value()
-        #Correct endianness
-        packed = pack('I', v)
-        unpacked = unpack('>I', packed)[0]
-
-        print("%i: %08x" % (r, unpacked))
+        print("%i: %08x" % (r, v))
 
