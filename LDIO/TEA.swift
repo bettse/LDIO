@@ -9,7 +9,12 @@
 import Foundation
 
 class TEA {
-    let key : [UInt32] = [0x30f6fe55, 0xc10bbf62, 0x347cb3c9, 0xfb293e97]
+    
+    var key : [UInt32] = [UInt32](count: 4, repeatedValue: 0)
+    
+    init(key: [UInt32]) {
+        self.key = key
+    }
     
     func decrypt(value: NSData) -> NSData {
         var _values : [UInt32] = [0, 0]

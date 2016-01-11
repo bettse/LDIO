@@ -17,6 +17,7 @@ class LegoReaderDriver : NSObject {
     static let singleton = LegoReaderDriver()
     static let magic : NSData = "(c) LEGO 2014".dataUsingEncoding(NSASCIIStringEncoding)!
     static let emptyResponse = NSData(bytes: [UInt8](count: NTAG213.pageSize * 4, repeatedValue: 0), length: NTAG213.pageSize * 4)
+    static let usbTeaKey : [UInt32] = [0x30f6fe55, 0xc10bbf62, 0x347cb3c9, 0xfb293e97]
 
     var reader : LegoReader = LegoReader.singleton
     var readerThread : NSThread?
@@ -25,7 +26,7 @@ class LegoReaderDriver : NSObject {
     var leftTokenCallbacks : [tokenLeft] = []
 
     var partialTokens : [UInt8:NTAG213] = [:]
-    let tea : TEA = TEA()
+    let tea : TEA = TEA(key: LegoReaderDriver.usbTeaKey)
     let mb = ModifiedBurtle(seed: 0)
     
     override init() {

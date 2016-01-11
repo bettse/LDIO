@@ -129,7 +129,7 @@ class SeedCommand : Command {
     }
     
     convenience init(x: UInt32, y: UInt32) {
-        let tea = TEA()
+        let tea = TEA(key: LegoReaderDriver.usbTeaKey)
         let d = tea.encrypt([x, y])
         self.init(data: d)
     }
@@ -151,7 +151,7 @@ class ChallengeCommand : Command {
     }
 
     convenience init(x: UInt32, y: UInt32) {
-        let tea = TEA()
+        let tea = TEA(key: LegoReaderDriver.usbTeaKey)
         let d = tea.encrypt([x, y])
         self.init(data: d)
     }
@@ -176,7 +176,7 @@ class PresenceCommand : Command {
 }
 
 class ModelCommand : Command {
-    let tea = TEA()
+    let tea = TEA(key: LegoReaderDriver.usbTeaKey)
     
     override init(data: NSData) {
         super.init()
@@ -188,7 +188,7 @@ class ModelCommand : Command {
     }
     
     convenience init(nfcIndex: UInt8) {
-        let tea = TEA()
+        let tea = TEA(key: LegoReaderDriver.usbTeaKey)
         let y : UInt32 = 0 //value that gets returned in response as second 4 bytes
         let x = UInt32(nfcIndex)
         let d : NSData = tea.encrypt([x, y])

@@ -154,7 +154,7 @@ class WriteResponse : Response {
 }
 
 class SeedResponse : Response {
-    let tea = TEA()
+    let tea = TEA(key: LegoReaderDriver.usbTeaKey)
     var x : UInt32 = 0
     var y : UInt32 = 0
     
@@ -173,7 +173,7 @@ class SeedResponse : Response {
 }
 
 class ChallengeResponse : Response {
-    let tea = TEA()
+    let tea = TEA(key: LegoReaderDriver.usbTeaKey)
     var x : UInt32 = 0
     var y : UInt32 = 0
     
@@ -205,7 +205,7 @@ class PresenceResponse : Response {
 
 
 class ModelResponse : Response {
-    let tea = TEA()
+    let tea = TEA(key: LegoReaderDriver.usbTeaKey)
     var status : UInt8 = 0
     var modelId : UInt8 = 0
     var prng : UInt32 = 0
