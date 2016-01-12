@@ -47,7 +47,7 @@ class Token : NTAG213 {
         }
     }
     
-    var pwd : UInt32 {
+    var pwd : NSData {
         get {
             //Construct uid + magic string + 2xAA padding
             let input = NSMutableData()
@@ -61,7 +61,8 @@ class Token : NTAG213 {
             input.getBytes(&array, length:count * sizeof(UInt32))
             
             //Hash
-            return magicHash(array)
+            var pwdBytes = magicHash(array)
+            return NSData(bytes: &pwdBytes, length: sizeof(UInt32))
         }
     }
     
