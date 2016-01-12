@@ -197,7 +197,7 @@ class NDEF {
         }
         
         var data : NSData
-        var record : AnyObject = []
+        var record : RTD.Abstract?
         
         init(data: NSData) {
             self.data = data
@@ -211,6 +211,8 @@ class NDEF {
                 default:
                     print("Sorry, can't handle the type \(type) yet")
                 }
+            case .Empty:
+                break;
             default:
                 print("Unhandled type \(tnf)")
             }
@@ -218,21 +220,27 @@ class NDEF {
     }
 
     class RTD {
-        class URI : CustomStringConvertible {
+        class Abstract : CustomStringConvertible {
             var description: String {
                 let myName = String(self.dynamicType).componentsSeparatedByString(".").last!
-                return "\(myName)(unimplemented)"
+                return myName
             }
+            
             var data : NSData
             
             init(payload: NSData) {
                 data = payload
             }
         }
+        class URI : Abstract {
+            override var description: String {
+                let myName = String(self.dynamicType).componentsSeparatedByString(".").last!
+                return "\(myName)(unimplemented)"
+            }
+        }
         
-        
-        class Text : CustomStringConvertible {
-            var description: String {
+        class Text : Abstract {
+            override var description: String {
                 let myName = String(self.dynamicType).componentsSeparatedByString(".").last!
                 return "\(myName)(\(lang): \(content))"
             }
@@ -264,13 +272,6 @@ class NDEF {
                 let contentData = data.subdataWithRange(NSMakeRange(start, length))
                 return NSString(data: contentData, encoding: encoding) as! String
             }
-            
-            var data : NSData
-            
-            init(payload: NSData) {
-                data = payload
-            }
-
         }
     }
 }
