@@ -65,7 +65,7 @@ class Token : NTAG213 {
         }
     }
     
-    var minifigId: UInt32 {
+    var minifigTea : TEA {
         get {
             //Calculate tea key
             var minifigKey : [UInt32] = [UInt32](count: 4, repeatedValue: 0)
@@ -81,11 +81,16 @@ class Token : NTAG213 {
                 let count = input.length / sizeof(UInt32)
                 var array : [UInt32] = [UInt32](count: count, repeatedValue: 0)
                 input.getBytes(&array, length:count * sizeof(UInt32))
-
+                
                 minifigKey[i] = magicHash(array)
             }
-
-            let t = TEA.init(key: minifigKey)
+            return TEA.init(key: minifigKey)
+        }
+    }
+    
+    var minifigId: UInt32 {
+        get {
+            let t = minifigTea
             let pages = pageRange(0x24, pageCount: 2)
             let doubleId : [UInt32] = t.decrypt(pages) // Id is repeated twice
 
@@ -93,6 +98,18 @@ class Token : NTAG213 {
                 return first
             }
             return 0;
+        }
+        set(newId) {
+            let t = minifigTea
+            let doubleId : [UInt32] = [UInt32](count: 2, repeatedValue: newId)
+            let pages : NSData = t.encrypt(doubleId)
+            let newPage0x24 = pages.subdataWithRange(NSMakeRange(0, Token.pageSize))
+            let newPage0x25 = pages.subdataWithRange(NSMakeRange(4, Token.pageSize))
+            print("\(page(0x24)) to be replaced by \(newPage0x24)")
+            print("\(page(0x25)) to be replaced by \(newPage0x25)")
+            
+            load(0x24, pageData: newPage0x24)
+            load(0x25, pageData: newPage0x25)
         }
     }
     
