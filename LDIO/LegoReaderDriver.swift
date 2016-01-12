@@ -69,7 +69,7 @@ class LegoReaderDriver : NSObject {
     func incomingUpdate(update: Update) {
         print(update)
         if (update.direction == Update.Direction.Arriving) {
-            let token = NTAG213(tagId: update.uid)
+            let token = Token(tagId: update.uid)
             dispatch_async(dispatch_get_main_queue(), {
                 for callback in self.loadTokenCallbacks {
                     callback(update.ledPlatform, Int(update.nfcIndex), token)
@@ -129,6 +129,9 @@ class LegoReaderDriver : NSObject {
     }
     
     func tokenComplete(token: NTAG213, nfcIndex: UInt8) {
+        let ldToken = token as! Token
+        print("PWD = \(String(ldToken.pwd, radix: 0x10))") //c7f95dc8
+
         if token.hasNdef {
             print("Complete token: \(token.ndefMessage)")
         }

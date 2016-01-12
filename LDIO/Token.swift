@@ -9,7 +9,7 @@
 import Foundation
 
 class Token : NTAG213 {
-    
+    static let pwdHashConstant = "(c) Copyright LEGO 2014"
     var secretPages : NSData {
         get {
             return pageRange(30, pageCount: 10)
@@ -45,8 +45,38 @@ class Token : NTAG213 {
         }
     }
     
+    var pwd : UInt32 {
+        get {
+            //Construct uid + magic string + 2xAA padding
+            let input = NSMutableData()
+            input.appendData(uid)
+            input.appendData(Token.pwdHashConstant.dataUsingEncoding(NSASCIIStringEncoding)!)
+            input.appendBytes([0xAA, 0xAA] as [UInt8], length: 2)
+            
+            //Make into array of [UInt32]
+            let count = input.length / sizeof(UInt32)
+            var array : [UInt32] = [UInt32](count: count, repeatedValue: 0)
+            input.getBytes(&array, length:count * sizeof(UInt32))
+            
+            //Hash
+            return magicHash(array).byteSwapped
+        }
+    }
+    
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
         return "\(me)(\(uid.hexadecimalString())::\(secretPages))"
+    }
+    
+    func magicHash(data: [UInt32]) -> UInt32 {
+        var result : UInt32 = 0
+        
+        for b in data {
+            let v4 = result.rotate(25)
+            let v5 = result.rotate(10)
+            result = b &+ v4 &+ v5 &- result
+        }
+        
+        return result
     }
 }

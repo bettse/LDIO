@@ -25,6 +25,7 @@
 		6DC3F1371BC08C0200DB31D5 /* Update.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1331BC08C0200DB31D5 /* Update.swift */; };
 		6DC3F13A1BC0971D00DB31D5 /* NTAG213.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */; };
 		6DC3F13C1BC0BFC600DB31D5 /* NDEF.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */; };
+		6DF90FB71C44A0D200C4B7B3 /* UInt32+rotate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6DF90FB61C44A0D200C4B7B3 /* UInt32+rotate.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -48,6 +49,7 @@
 		6DC3F1331BC08C0200DB31D5 /* Update.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Update.swift; sourceTree = "<group>"; };
 		6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NTAG213.swift; sourceTree = "<group>"; };
 		6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NDEF.swift; sourceTree = "<group>"; };
+		6DF90FB61C44A0D200C4B7B3 /* UInt32+rotate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UInt32+rotate.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -107,6 +109,7 @@
 			children = (
 				6D5052151BC8B905000D4BCB /* NSColor+hex.swift */,
 				6D6549001BBB6D670018500C /* NSData+fromHex.swift */,
+				6DF90FB61C44A0D200C4B7B3 /* UInt32+rotate.swift */,
 			);
 			name = Extensions;
 			sourceTree = "<group>";
@@ -184,6 +187,7 @@
 				6D4F1B991BB843A0004149DE /* LegoReader.swift in Sources */,
 				6DC3F1371BC08C0200DB31D5 /* Update.swift in Sources */,
 				6D4F1B8C1BB8437B004149DE /* ViewController.swift in Sources */,
+				6DF90FB71C44A0D200C4B7B3 /* UInt32+rotate.swift in Sources */,
 				6DC3F1351BC08C0200DB31D5 /* Report.swift in Sources */,
 				6DC3F1361BC08C0200DB31D5 /* Response.swift in Sources */,
 				6D5052161BC8B905000D4BCB /* NSColor+hex.swift in Sources */,
