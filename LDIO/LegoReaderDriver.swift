@@ -76,9 +76,9 @@ class LegoReaderDriver : NSObject {
                 }
             })
             partialTokens[update.nfcIndex] = token
-            reader.outputCommand(E1Command(nfcIndex: update.nfcIndex, pwd: [0xff, 0xff, 0xff, 0xff]))
+            //reader.outputCommand(E1Command(nfcIndex: update.nfcIndex, pwd: [0xff, 0xff, 0xff, 0xff]))
             //reader.outputCommand(ModelCommand(nfcIndex: update.nfcIndex))
-            //reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
+            reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {
                 for callback in self.leftTokenCallbacks {
@@ -129,11 +129,16 @@ class LegoReaderDriver : NSObject {
     }
     
     func tokenComplete(token: NTAG213, nfcIndex: UInt8) {
+        print("Token complete")
         let ldToken = token as! Token
         print("PWD = \(String(ldToken.pwd, radix: 0x10))") //c7f95dc8
+        if (ldToken.category == 0) {
+            print("Minifig: \(ldToken.minifigId)")
+        }
+
 
         if token.hasNdef {
-            print("Complete token: \(token.ndefMessage)")
+            print("NDEF: \(token.ndefMessage)")
         }
     }
 }

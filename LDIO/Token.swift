@@ -10,6 +10,8 @@ import Foundation
 
 class Token : NTAG213 {
     static let pwdHashConstant = "(c) Copyright LEGO 2014"
+    static let minifigHashConstant = NSData(fromHex: "b7 d5 d7 e6 e7 ba 3c a8 d8 75 47 68 cf 23 e9 fe")
+    
     var secretPages : NSData {
         get {
             return pageRange(30, pageCount: 10)
@@ -59,7 +61,38 @@ class Token : NTAG213 {
             input.getBytes(&array, length:count * sizeof(UInt32))
             
             //Hash
-            return magicHash(array).byteSwapped
+            return magicHash(array)
+        }
+    }
+    
+    var minifigId: UInt32 {
+        get {
+            //Calculate tea key
+            var minifigKey : [UInt32] = [UInt32](count: 4, repeatedValue: 0)
+            
+            for i in 0..<4 {
+                let partialConstant = Token.minifigHashConstant.subdataWithRange(NSMakeRange(0, (i+1)*sizeof(UInt32)))
+                let input = NSMutableData()
+                input.appendData(uid)
+                input.appendData(partialConstant)
+                input.appendBytes([0xAA] as [UInt8], length: 1)
+                
+                //Make into array of [UInt32]
+                let count = input.length / sizeof(UInt32)
+                var array : [UInt32] = [UInt32](count: count, repeatedValue: 0)
+                input.getBytes(&array, length:count * sizeof(UInt32))
+
+                minifigKey[i] = magicHash(array)
+            }
+
+            let t = TEA.init(key: minifigKey)
+            let pages = pageRange(0x24, pageCount: 2)
+            let doubleId : [UInt32] = t.decrypt(pages) // Id is repeated twice
+
+            if let first = doubleId.first {
+                return first
+            }
+            return 0;
         }
     }
     
