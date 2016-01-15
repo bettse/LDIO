@@ -18,7 +18,7 @@ class Token : NTAG213 {
         }
     }
     
-    var vehicleGadget : UInt16 {
+    var vehicleGadgetId : UInt16 {
         get {
             let vgPage : NSData = page(36)
             var value : UInt16 = 0
@@ -38,12 +38,12 @@ class Token : NTAG213 {
     
     
     //0 in minifigs, 1 in vehicle...enum?
-    var category : UInt16 {
+    var brickDesign : FuncCirkleBrick {
         get {
-            let cPage : NSData = page(38)
+            let cPage : NSData = page(0x26)
             var value : UInt16 = 0
             cPage.getBytes(&value, range: NSMakeRange(1, sizeof(value.dynamicType)))
-            return value
+            return FuncCirkleBrick(rawValue: value)!
         }
     }
     
