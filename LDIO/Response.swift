@@ -8,6 +8,8 @@
 
 import Foundation
 
+let HEX = 0x10
+
 class Response : Message {
     let corrolationIdIndex = 0
     var corrolationId : UInt8 = 0
@@ -217,7 +219,6 @@ class ModelResponse : Response {
         let decoded : NSData = tea.decrypt(params.subdataWithRange(NSMakeRange(1, 8)))
         modelId = decoded[0]
         decoded.getBytes(&prng, range: NSMakeRange(1, 3))
-        print(decoded)
     }
     
     override var description: String {
@@ -242,14 +243,21 @@ class E1Response : Response {
         }
     }
     
+    var pack : UInt16 = 0
+    
     override init(data: NSData) {
         super.init(data: data)
         params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
+        
+        //The first byte is 0 for valid nfc index, 0x38 for invalid index
+        params.getBytes(&pack, range: NSMakeRange(1, sizeof(UInt16)))
+        self.pack = self.pack.byteSwapped
+        //optional 4th byte when PWD failed
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(\(String(self.nfcIndex, radix: 0x10)) -> \(params))"
+        return "\(me)(#\(String(self.nfcIndex, radix: HEX)) PACK: \(String(self.pack, radix: HEX)))"
     }
 }
 

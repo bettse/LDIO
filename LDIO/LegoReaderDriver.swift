@@ -76,8 +76,7 @@ class LegoReaderDriver : NSObject {
                 }
             })
             partialTokens[update.nfcIndex] = token
-            //reader.outputCommand(E1Command(nfcIndex: update.nfcIndex, pwd: [0xff, 0xff, 0xff, 0xff]))
-            //reader.outputCommand(ModelCommand(nfcIndex: update.nfcIndex))
+            //Try to read assuming LD PWD
             reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
             dispatch_async(dispatch_get_main_queue(), {
@@ -96,15 +95,25 @@ class LegoReaderDriver : NSObject {
         } else if let response = response as? ChallengeResponse {
             print(response)
         } else if let response = response as? ReadResponse {
-            tokenRead(response)
+            if (response.pageNumber == 0 && response.pageData.isEqualToData(LegoReaderDriver.emptyResponse)) {
+                //Try using NTAG213 default PWD
+                print("Page \(response.pageNumber) failed, attempting using 0xFFFFFFFF PWD")
+                reader.outputCommand(E1Command(nfcIndex: response.nfcIndex, mode: E1Command.AuthMode.dev, pwd: 0xFFFFFFFF))
+            } else {
+                tokenRead(response)
+            }
         } else if let response = response as? WriteResponse {
-            //Re-read the written page
-            reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: response.pageNumber))
+            print(response)
         } else if let response = response as? ModelResponse {
             print(response)
         } else if let response = response as? E1Response {
             print(response)
-            reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: 0))
+            if (response.params.length == 3) { //success
+                reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: 0))
+            } else {
+                print("E1 failed and returned \(response.params)")
+                reader.outputCommand(E1Command(nfcIndex: response.nfcIndex, mode: E1Command.AuthMode.normal, pwd: 0))
+            }
         } else if let response = response as? LightOnResponse {
             print(response)
         } else {
@@ -114,10 +123,6 @@ class LegoReaderDriver : NSObject {
     
     func tokenRead(response: ReadResponse) {
         if let token = partialTokens[response.nfcIndex] {
-            if (response.pageNumber == 0 && response.pageData.isEqualToData(LegoReaderDriver.emptyResponse)) {
-                print("Halting token read due to empty page 0")
-                return
-            }
             token.load(response.pageNumber, pageData: response.pageData)
             if (token.complete()) {
                 tokenComplete(token, nfcIndex: response.nfcIndex)
@@ -130,15 +135,22 @@ class LegoReaderDriver : NSObject {
     
     func tokenComplete(token: NTAG213, nfcIndex: UInt8) {
         print("Token complete")
-        let ldToken = token as! Token
-        print("PWD = \(String(ldToken.pwd, radix: 0x10))") //c7f95dc8
-        if (ldToken.category == 0) {
-            print("Minifig: \(ldToken.minifigId)")
-        }
-
 
         if token.hasNdef {
             print("NDEF: \(token.ndefMessage)")
         }
+        //let ldToken = token as! Token        
+        //reader.outputCommand(WriteCommand(nfcIndex: nfcIndex, page: 0x2B, data: ldToken.pwd))
+        
+        /*
+        if (ldToken.category == 0) {
+            print("Minifig: \(ldToken.minifigId)")
+            if (ldToken.minifigId > 0xFF) {
+                ldToken.minifigId = 39 //40 = superman
+                reader.outputCommand(WriteCommand(nfcIndex: nfcIndex, page: 0x24, data: ldToken.page(0x24)))
+                reader.outputCommand(WriteCommand(nfcIndex: nfcIndex, page: 0x25, data: ldToken.page(0x25)))
+            }
+        }
+        */
     }
 }

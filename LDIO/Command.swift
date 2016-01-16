@@ -329,19 +329,28 @@ class LightFlashAllCommand : Command {
 }
 
 class E1Command : Command {
+    enum AuthMode : UInt8 {
+        case unknown = 0
+        case normal = 1
+        case dev = 2
+    }
     var nfcIndex : UInt8
-    var pwd : [UInt8] = [UInt8](count: 4, repeatedValue: 0)
-    let mode : UInt8 = 2 //1 = normal, 2 = debug
+    var pwd : UInt32  = 0xFFFFFFFF
+    var mode : AuthMode = .normal
     
-    init(nfcIndex: UInt8, pwd: [UInt8]) {
+    init(nfcIndex: UInt8, mode: AuthMode, pwd: UInt32) {
         self.nfcIndex = nfcIndex
         self.pwd = pwd
+        self.mode = mode
         super.init()
         self.type = .E1
     }
     
     override func serialize() -> NSData {
-        params = NSData(bytes: [nfcIndex, mode, pwd[0], pwd[1], pwd[2], pwd[3]] as [UInt8], length: 6)
+        let pwdBytes = 0.stride(to: 32, by: 8).map {
+            UInt8(truncatingBitPattern: self.pwd >> UInt32($0))
+        }
+        params = NSData(bytes: [nfcIndex, mode.rawValue, pwdBytes[0], pwdBytes[1], pwdBytes[2], pwdBytes[3]] as [UInt8], length: 6)
         return super.serialize()
     }
     
