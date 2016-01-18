@@ -147,11 +147,12 @@ class WriteResponse : Response {
     
     override init(data: NSData) {
         super.init(data: data)
+        params = data.subdataWithRange(NSMakeRange(paramsIndex, data.length - paramsIndex))
     }
     
     override var description: String {
         let me = String(self.dynamicType).componentsSeparatedByString(".").last!
-        return "\(me)(NFC \(nfcIndex) page \(pageNumber))"
+        return "\(me)(NFC \(nfcIndex) page \(pageNumber): \(params))"
     }
 }
 
