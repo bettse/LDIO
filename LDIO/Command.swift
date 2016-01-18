@@ -102,6 +102,9 @@ class WriteCommand : Command {
         if (data.length != NTAG213.pageSize) {
             print("WriteCommand data is not the correct length")
         }
+        if (page > 39) {
+            print("Toypad firmware cannot write beyond page 39 (0x27)")
+        }
         let temp = NSMutableData(bytes: [nfcIndex, page] as [UInt8], length: 2)
         temp.appendData(data)
         params = NSData(data: temp)
