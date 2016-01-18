@@ -125,7 +125,7 @@ class LegoReaderDriver : NSObject {
         if let token = partialTokens[response.nfcIndex] {
             token.load(response.pageNumber, pageData: response.pageData)
             if (token.complete()) {
-                tokenComplete(token, nfcIndex: response.nfcIndex)
+                tokenComplete(token as! Token, nfcIndex: response.nfcIndex)
                 partialTokens.removeValueForKey(response.nfcIndex)
             } else {
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))
@@ -133,15 +133,8 @@ class LegoReaderDriver : NSObject {
         } //end if token
     }
     
-    func tokenComplete(token: NTAG213, nfcIndex: UInt8) {
-        print("Token complete")
-
-        if token.hasNdef {
-            print("NDEF: \(token.ndefMessage)")
-        }
-        //let ldToken = token as! Token        
-        //reader.outputCommand(WriteCommand(nfcIndex: nfcIndex, page: 0x2B, data: ldToken.pwd))
-        
+    func tokenComplete(token: Token, nfcIndex: UInt8) {
+        print("Token complete: PWD = \(token.pwd)")
         /*
         if (ldToken.category == 0) {
             print("Minifig: \(ldToken.minifigId)")
