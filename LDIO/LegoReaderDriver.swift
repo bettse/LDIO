@@ -98,7 +98,7 @@ class LegoReaderDriver : NSObject {
             if (response.pageNumber == 0 && response.pageData.isEqualToData(LegoReaderDriver.emptyResponse)) {
                 //Try using NTAG213 default PWD
                 print("Page \(response.pageNumber) failed, attempting using 0xFFFFFFFF PWD")
-                reader.outputCommand(E1Command(nfcIndex: response.nfcIndex, mode: E1Command.AuthMode.dev, pwd: 0xFFFFFFFF))
+                reader.outputCommand(AuthModeCommand(nfcIndex: response.nfcIndex, mode: AuthModeCommand.AuthMode.dev, pwd: 0xFFFFFFFF))
             } else {
                 tokenRead(response)
             }
@@ -106,13 +106,13 @@ class LegoReaderDriver : NSObject {
             print(response)
         } else if let response = response as? ModelResponse {
             print(response)
-        } else if let response = response as? E1Response {
+        } else if let response = response as? AuthModeResponse {
             print(response)
             if (response.params.length == 3) { //success
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: 0))
             } else {
                 print("E1 failed and returned \(response.params)")
-                reader.outputCommand(E1Command(nfcIndex: response.nfcIndex, mode: E1Command.AuthMode.normal, pwd: 0))
+                reader.outputCommand(AuthModeCommand(nfcIndex: response.nfcIndex, mode: AuthModeCommand.AuthMode.normal, pwd: 0))
             }
         } else if let response = response as? LightOnResponse {
             print(response)

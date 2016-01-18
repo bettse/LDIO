@@ -331,7 +331,7 @@ class LightFlashAllCommand : Command {
     }
 }
 
-class E1Command : Command {
+class AuthModeCommand : Command {
     enum AuthMode : UInt8 {
         case unknown = 0
         case normal = 1

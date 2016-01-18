@@ -67,7 +67,7 @@ class Response : Message {
         case .C5:
             return C5Response(data: data)
         case .E1:
-            return E1Response(data: data)
+            return AuthModeResponse(data: data)
         default:
             print("unknown parse with data: \(data)")
             return Response(data: data)
@@ -234,10 +234,10 @@ class LightFadeSingleResponse : Response {}
 class LightFlashAllResponse : Response {}
 class LightFadeRandomResponse : Response {}
 
-class E1Response : Response {
+class AuthModeResponse : Response {
     var nfcIndex : UInt8  {
         get {
-            if let command = command as? E1Command {
+            if let command = command as? AuthModeCommand {
                 return command.nfcIndex
             }
             return 0
