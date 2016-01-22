@@ -67,7 +67,6 @@ class LegoReaderDriver : NSObject {
     }
     
     func incomingUpdate(update: Update) {
-        print(update)
         if (update.direction == Update.Direction.Arriving) {
             let token = Token(tagId: update.uid)
             dispatch_async(dispatch_get_main_queue(), {
@@ -135,15 +134,10 @@ class LegoReaderDriver : NSObject {
     
     func tokenComplete(token: Token, nfcIndex: UInt8) {
         print("Token complete: PWD = \(token.pwd)")
-        /*
-        if (ldToken.category == 0) {
-            print("Minifig: \(ldToken.minifigId)")
-            if (ldToken.minifigId > 0xFF) {
-                ldToken.minifigId = 39 //40 = superman
-                reader.outputCommand(WriteCommand(nfcIndex: nfcIndex, page: 0x24, data: ldToken.page(0x24)))
-                reader.outputCommand(WriteCommand(nfcIndex: nfcIndex, page: 0x25, data: ldToken.page(0x25)))
-            }
-        }
-        */
+    }
+    
+    func save(token: Token) {
+        reader.outputCommand(WriteCommand(nfcIndex: 0, page: 0x24, data: token.page(0x24)))
+        reader.outputCommand(WriteCommand(nfcIndex: 0, page: 0x25, data: token.page(0x25)))
     }
 }

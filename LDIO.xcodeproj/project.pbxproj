@@ -16,6 +16,7 @@
 		6D4F1B911BB8437B004149DE /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 6D4F1B8F1BB8437B004149DE /* Main.storyboard */; };
 		6D4F1B991BB843A0004149DE /* LegoReader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D4F1B981BB843A0004149DE /* LegoReader.swift */; };
 		6D5052161BC8B905000D4BCB /* NSColor+hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D5052151BC8B905000D4BCB /* NSColor+hex.swift */; };
+		6D5115621C4C81BB002E771B /* 6104392.png in Resources */ = {isa = PBXBuildFile; fileRef = 6D5115611C4C81BB002E771B /* 6104392.png */; };
 		6D6549011BBB6D670018500C /* NSData+fromHex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D6549001BBB6D670018500C /* NSData+fromHex.swift */; };
 		6D7E2CE11C23B88300EC553A /* TEA.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7E2CE01C23B88300EC553A /* TEA.swift */; };
 		6D7E2CE31C23C24C00EC553A /* ModifiedBurtle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D7E2CE21C23C24C00EC553A /* ModifiedBurtle.swift */; };
@@ -41,6 +42,7 @@
 		6D4F1B921BB8437B004149DE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D4F1B981BB843A0004149DE /* LegoReader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LegoReader.swift; sourceTree = "<group>"; };
 		6D5052151BC8B905000D4BCB /* NSColor+hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSColor+hex.swift"; sourceTree = "<group>"; };
+		6D5115611C4C81BB002E771B /* 6104392.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = 6104392.png; sourceTree = "<group>"; };
 		6D6549001BBB6D670018500C /* NSData+fromHex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "NSData+fromHex.swift"; sourceTree = "<group>"; };
 		6D7E2CE01C23B88300EC553A /* TEA.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TEA.swift; sourceTree = "<group>"; };
 		6D7E2CE21C23C24C00EC553A /* ModifiedBurtle.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ModifiedBurtle.swift; sourceTree = "<group>"; };
@@ -84,6 +86,7 @@
 		6D4F1B881BB8437B004149DE /* LDIO */ = {
 			isa = PBXGroup;
 			children = (
+				6D5115611C4C81BB002E771B /* 6104392.png */,
 				6D4F1B891BB8437B004149DE /* AppDelegate.swift */,
 				6D4F1B981BB843A0004149DE /* LegoReader.swift */,
 				6D12EBDA1BBA4E8B00D6D49E /* LegoReaderDriver.swift */,
@@ -174,6 +177,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				6D5115621C4C81BB002E771B /* 6104392.png in Resources */,
 				6D4F1B8E1BB8437B004149DE /* Assets.xcassets in Resources */,
 				6D4F1B911BB8437B004149DE /* Main.storyboard in Resources */,
 			);
