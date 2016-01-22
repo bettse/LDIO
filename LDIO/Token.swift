@@ -42,8 +42,14 @@ class Token : NTAG213 {
         get {
             let cPage : NSData = page(0x26)
             var value : UInt16 = 0
-            cPage.getBytes(&value, range: NSMakeRange(1, sizeof(value.dynamicType)))
-            return FuncCirkleBrick(rawValue: value)!
+            cPage.getBytes(&value, range: NSMakeRange(0, sizeof(value.dynamicType)))
+            return FuncCirkleBrick(rawValue: value.bigEndian)!
+        }
+        set (newValue) {
+            let cPage : NSMutableData = page(0x26).mutableCopy() as! NSMutableData
+            var value : UInt16 = UInt16(newValue.rawValue).littleEndian
+            cPage.replaceBytesInRange(NSMakeRange(0, sizeof(UInt16)), withBytes: &value)
+            load(0x26, pageData: NSData(data: cPage))
         }
     }
     
@@ -101,16 +107,17 @@ class Token : NTAG213 {
             return 0;
         }
         set(newId) {
+            if (brickDesign != FuncCirkleBrick.Minifig) {
+                print("Attempting to set minifig ID on a non-minifig.  If this is a real LD token, this will fail")
+            }
             let t = minifigTea
             let doubleId : [UInt32] = [UInt32](count: 2, repeatedValue: newId)
             let pages : NSData = t.encrypt(doubleId)
             let newPage0x24 = pages.subdataWithRange(NSMakeRange(0, Token.pageSize))
             let newPage0x25 = pages.subdataWithRange(NSMakeRange(4, Token.pageSize))
-            print("\(page(0x24)) to be replaced by \(newPage0x24)")
-            print("\(page(0x25)) to be replaced by \(newPage0x25)")
-            
             load(0x24, pageData: newPage0x24)
             load(0x25, pageData: newPage0x25)
+            brickDesign = FuncCirkleBrick.Minifig
         }
     }
     

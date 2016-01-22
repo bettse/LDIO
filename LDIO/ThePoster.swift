@@ -19,7 +19,7 @@ class ThePoster {
     //and the minifigs are "Func. Cirkle Brick 4X4X2/3 No.2" followed by a "No. XX" for each different minifig.
     
     static let Minifigs = [
-    ">null<",
+    "<Placeholder>",
     "Batman",
     "Gandalf",
     "Wyldstyle",

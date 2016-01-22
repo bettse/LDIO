@@ -19,16 +19,15 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         super.viewDidLoad()
         // Do any additional setup after loading the view.
         
-        
-        //TODO: readerDriver.registerOnConnect()
-        
-        readerDriver.registerTokenLoaded { (ledPlatform, nfcIndex, token) -> Void in
+        readerDriver.registerToypadActivate({ () -> Void in
+            self.toypadState.stringValue = "Toypad activated"
+        })
+        readerDriver.registerTokenLoaded({ (ledPlatform, nfcIndex, token) -> Void in
             self.representedObject = token
-        }
+        })
         readerDriver.registerTokenLeft({ (ledPlatform, nfcIndex) -> Void in
             self.representedObject = nil
         })
-        
 
         self.minifigTable.setDelegate(self)
         self.minifigTable.setDataSource(self)
@@ -45,10 +44,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
         }
     }
 
-    func save() {
+    @IBAction func save(sender: NSButton) {
         if let token = self.representedObject as? Token {
-            token.minifigId = UInt32(self.minifigTable.selectedRow)
-            readerDriver.save(token)
+            if (self.minifigTable.selectedRow > 0) {
+                token.minifigId = UInt32(self.minifigTable.selectedRow)
+                readerDriver.save(token)
+            }
         }
     }
     
@@ -59,8 +60,9 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     }
 
     func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView? {
-        let cell = NSTableCellView()
-        cell.textField?.stringValue = ThePoster.Minifigs[row]
+        let cell: NSTableCellView = tableView.makeViewWithIdentifier(tableColumn!.identifier, owner: self) as! NSTableCellView
+        cell.imageView!.image = NSImage(named: "6104392")
+        cell.textField!.stringValue = ThePoster.Minifigs[row]
         return cell
     }
 }

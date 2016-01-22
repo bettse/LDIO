@@ -12,6 +12,7 @@ import AppKit
 
 typealias tokenLoad = (Message.LedPlatform, Int, NTAG213) -> Void
 typealias tokenLeft = (Message.LedPlatform, Int) -> Void
+typealias toypadActivateCallback = () -> Void
 
 class LegoReaderDriver : NSObject {
     static let singleton = LegoReaderDriver()
@@ -24,7 +25,8 @@ class LegoReaderDriver : NSObject {
     
     var loadTokenCallbacks : [tokenLoad] = []
     var leftTokenCallbacks : [tokenLeft] = []
-
+    var toypadActivateCallbacks : [toypadActivateCallback] = []
+    
     var partialTokens : [UInt8:NTAG213] = [:]
     let tea : TEA = TEA(key: LegoReaderDriver.usbTeaKey)
     let mb = ModifiedBurtle(seed: 0)
@@ -46,6 +48,10 @@ class LegoReaderDriver : NSObject {
     
     func registerTokenLeft(callback: tokenLeft) {
         leftTokenCallbacks.append(callback)
+    }
+
+    func registerToypadActivate(callback: toypadActivateCallback) {
+        toypadActivateCallbacks.append(callback)
     }
     
     func deviceConnected(notification: NSNotification) {
@@ -88,7 +94,11 @@ class LegoReaderDriver : NSObject {
     
     func incomingResponse(response: Response) {
         if let _ = response as? ActivateResponse {
-            print(response)
+            dispatch_async(dispatch_get_main_queue(), {
+                for callback in self.toypadActivateCallbacks {
+                    callback()
+                }
+            })
         } else if let response = response as? SeedResponse {
             print(response)
         } else if let response = response as? ChallengeResponse {
@@ -137,7 +147,9 @@ class LegoReaderDriver : NSObject {
     }
     
     func save(token: Token) {
+        //Need dirty page detection
         reader.outputCommand(WriteCommand(nfcIndex: 0, page: 0x24, data: token.page(0x24)))
         reader.outputCommand(WriteCommand(nfcIndex: 0, page: 0x25, data: token.page(0x25)))
+        reader.outputCommand(WriteCommand(nfcIndex: 0, page: 0x26, data: token.page(0x26)))
     }
 }
