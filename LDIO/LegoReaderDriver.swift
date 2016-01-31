@@ -151,7 +151,10 @@ class LegoReaderDriver : NSObject {
     }
     
     func tokenComplete(token: Token, nfcIndex: UInt8) {
-        print("Token complete: PWD = \(token.pwd)")
+        print("Token complete \(token.uid)")
+        if(token.hasNdef) {
+            print(token.ndefMessage)
+        }
     }
     
     func save(token: Token) {

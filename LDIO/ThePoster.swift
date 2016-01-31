@@ -17,7 +17,7 @@ class ThePoster {
     //There are two types of LD pieces: minifigs with 2x1 base, and unwritten bases for vehicles/gadgets that are 2x2.
     //I found that the vehicle/gadget ones are "6104392: Func. Cirkle Brick 4X4X2/3 No.1" http://brickset.com/parts/6104392
     //and the minifigs are "Func. Cirkle Brick 4X4X2/3 No.2" followed by a "No. XX" for each different minifig.
-    
+
     static let Minifigs = [
     "<Placeholder>",
     "Batman",
