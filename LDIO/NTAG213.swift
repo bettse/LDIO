@@ -113,7 +113,11 @@ class NTAG213 : CustomStringConvertible {
             data.appendData(pageData)
         } else {
             let pageRange = NSMakeRange(pageNumber * NTAG213.pageSize, NTAG213.pageSize)
-            data.replaceBytesInRange(pageRange, withBytes: pageData.bytes)
+            if data.length >= pageRange.location + pageRange.length { //prevent writing to non-existant data
+                data.replaceBytesInRange(pageRange, withBytes: pageData.bytes)
+            } else {
+                print("Tried writing \(pageRange.length) bytes to offset \(pageRange.location), but only have \(data.length) bytes of data")
+            }
         }
         if (data.length > NTAG213.tokenSize) {
             data = data.subdataWithRange(NSMakeRange(0, NTAG213.tokenSize)).mutableCopy() as! NSMutableData //Remove excess bytes
