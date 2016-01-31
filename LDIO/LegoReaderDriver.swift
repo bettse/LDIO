@@ -28,6 +28,7 @@ class LegoReaderDriver : NSObject {
     var toypadActivateCallbacks : [toypadActivateCallback] = []
     
     var partialTokens : [UInt8:NTAG213] = [:]
+    var platformMap : [UInt8:Message.LedPlatform] = [:]
     let tea : TEA = TEA(key: LegoReaderDriver.usbTeaKey)
     let mb = ModifiedBurtle(seed: 0)
     
@@ -80,10 +81,14 @@ class LegoReaderDriver : NSObject {
                     callback(update.ledPlatform, Int(update.nfcIndex), token)
                 }
             })
+            platformMap[update.nfcIndex] = update.ledPlatform
             partialTokens[update.nfcIndex] = token
             //Try to read assuming LD PWD
+            reader.outputCommand(LightOnCommand(platform: update.ledPlatform, color: NSColor.whiteColor()))
             reader.outputCommand(ReadCommand(nfcIndex: update.nfcIndex, page: 0))
         } else if (update.direction == Update.Direction.Departing) {
+            reader.outputCommand(LightOnCommand(platform: update.ledPlatform, color: NSColor.blackColor()))
+            platformMap.removeValueForKey(update.nfcIndex)
             dispatch_async(dispatch_get_main_queue(), {
                 for callback in self.leftTokenCallbacks {
                     callback(update.ledPlatform, Int(update.nfcIndex))
@@ -136,6 +141,9 @@ class LegoReaderDriver : NSObject {
             if (token.complete()) {
                 tokenComplete(token as! Token, nfcIndex: response.nfcIndex)
                 partialTokens.removeValueForKey(response.nfcIndex)
+                if let platform = platformMap[response.nfcIndex] {
+                    reader.outputCommand(LightOnCommand(platform: platform, color: NSColor.greenColor()))
+                }
             } else {
                 reader.outputCommand(ReadCommand(nfcIndex: response.nfcIndex, page: token.nextPage()))
             }

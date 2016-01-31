@@ -213,9 +213,11 @@ class LightOnCommand : Command {
     
     init(platform: Message.LedPlatform, color: NSColor) {
         self.platform = platform
-        red = color.red
-        green = color.green
-        blue = color.blue
+        if let color = color.colorUsingColorSpaceName(NSCalibratedRGBColorSpace) {
+            red = color.red
+            green = color.green
+            blue = color.blue
+        }
         super.init()
         self.type = .LightOn
     }
@@ -245,9 +247,11 @@ class Fade {
     init(speed: Int, count: Int, color: NSColor) {
         self.speed = UInt8(speed)
         self.count = UInt8(count)
-        red = color.red
-        green = color.green
-        blue = color.blue
+        if let color = color.colorUsingColorSpaceName(NSCalibratedRGBColorSpace) {
+            red = color.red
+            green = color.green
+            blue = color.blue
+        }
     }
     
     init() {}
@@ -292,9 +296,11 @@ class Flash {
     
     init(count: Int, color: NSColor) {
         self.count = UInt8(count)
-        red = color.red
-        green = color.green
-        blue = color.blue
+        if let color = color.colorUsingColorSpaceName(NSCalibratedRGBColorSpace) {
+            red = color.red
+            green = color.green
+            blue = color.blue
+        }
     }
     
     init() {}
