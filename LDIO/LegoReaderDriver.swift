@@ -34,10 +34,10 @@ class LegoReaderDriver : NSObject {
     
     override init() {
         super.init()
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "deviceConnected:", name: "deviceConnected", object: nil)
-        NSNotificationCenter.defaultCenter().addObserver(self, selector: "incomingMessage:", name: "incomingMessage", object: nil)
-
-        readerThread = NSThread(target: reader, selector:"initUsb", object: nil)
+        
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LegoReaderDriver.deviceConnected(_:)), name: "deviceConnected", object: nil)
+        NSNotificationCenter.defaultCenter().addObserver(self, selector: #selector(LegoReaderDriver.incomingMessage(_:)), name: "incomingMessage", object: nil)
+        readerThread = NSThread(target: reader, selector:#selector(LegoReader.initUsb), object: nil)
         if let thread = readerThread {
             thread.start()
         }
