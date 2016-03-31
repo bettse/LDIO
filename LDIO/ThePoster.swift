@@ -62,7 +62,9 @@ class ThePoster {
     "Superman",
     "Unikitty",
     "Wicked Witch",
-    "Superwoman",
-    "Zane"
+    "Wonder Woman",
+    "Zane",
+    "Green Arrow",
+    "Super Girl"
     ]
 }
