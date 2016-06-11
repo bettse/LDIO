@@ -95,19 +95,27 @@
 				6DC3F1391BC0971D00DB31D5 /* NTAG213.swift */,
 				6D0119021BC4BC5F004758FA /* Token.swift */,
 				6DC3F13B1BC0BFC600DB31D5 /* NDEF.swift */,
+				6DAB5C171C48A05E00AD0A0E /* ThePoster.swift */,
+				6D4F1B8B1BB8437B004149DE /* ViewController.swift */,
+				6D4F1B8F1BB8437B004149DE /* Main.storyboard */,
+				6DA40A151D0B907D00D41145 /* Protocol */,
+				6DC3F1381BC08C1100DB31D5 /* Extensions */,
+				6D4F1B8D1BB8437B004149DE /* Assets.xcassets */,
+				6D4F1B921BB8437B004149DE /* Info.plist */,
+			);
+			path = LDIO;
+			sourceTree = "<group>";
+		};
+		6DA40A151D0B907D00D41145 /* Protocol */ = {
+			isa = PBXGroup;
+			children = (
 				6DC3F1301BC08C0200DB31D5 /* Command.swift */,
 				6DC3F1311BC08C0200DB31D5 /* Report.swift */,
 				6DC3F1321BC08C0200DB31D5 /* Response.swift */,
 				6DC3F1331BC08C0200DB31D5 /* Update.swift */,
 				6D12EBDC1BBA50DC00D6D49E /* Message.swift */,
-				6D4F1B8B1BB8437B004149DE /* ViewController.swift */,
-				6D4F1B8D1BB8437B004149DE /* Assets.xcassets */,
-				6D4F1B8F1BB8437B004149DE /* Main.storyboard */,
-				6D4F1B921BB8437B004149DE /* Info.plist */,
-				6DC3F1381BC08C1100DB31D5 /* Extensions */,
-				6DAB5C171C48A05E00AD0A0E /* ThePoster.swift */,
 			);
-			path = LDIO;
+			name = Protocol;
 			sourceTree = "<group>";
 		};
 		6DC3F1381BC08C1100DB31D5 /* Extensions */ = {
