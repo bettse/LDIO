@@ -13,6 +13,7 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
     @IBOutlet weak var toypadState : NSTextField!
     @IBOutlet weak var tokenState : NSTextField!
     @IBOutlet weak var minifigTable : NSTableView!
+    @IBOutlet weak var minifigId : NSTextField!
     @IBOutlet weak var saveButton : NSButton!
     
     override func viewDidLoad() {
@@ -46,10 +47,12 @@ class ViewController: NSViewController, NSTableViewDataSource, NSTableViewDelega
 
     @IBAction func save(sender: NSButton) {
         if let token = self.representedObject as? Token {
-            if (self.minifigTable.selectedRow > 0) {
+            if (self.minifigId.intValue > 0) {
+                token.minifigId = UInt32(self.minifigId.intValue)
+            } else if (self.minifigTable.selectedRow > 0) {
                 token.minifigId = UInt32(self.minifigTable.selectedRow)
-                readerDriver.save(token)
             }
+            readerDriver.save(token)
         }
     }
     
